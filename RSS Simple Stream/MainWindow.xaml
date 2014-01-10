@@ -1,0 +1,28 @@
+﻿<Fluent:RibbonWindow 
+    x:Class="RSS_Simple_Stream.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
+    Title="MainWindow" 
+    Width="500" 
+    Height="250" >
+    <Grid>
+        <Fluent:Ribbon>
+            <!--Backstage-->
+            <Fluent:Ribbon.Menu>
+                <Fluent:Backstage>
+                </Fluent:Backstage>
+            </Fluent:Ribbon.Menu>
+            <!--Tabs-->
+            <Fluent:RibbonTabItem Header="Tab">
+                <Fluent:RibbonGroupBox Header="Group">
+                    <Fluent:Button Name="buttonGreen" Header="Green"
+Icon="Images\Green.png"
+LargeIcon="Images\GreenLarge.png" />
+                    <Fluent:Button Name="buttonGray" Header="Grey" Icon="Images\Gray.png"
+LargeIcon="Images\GrayLarge.png" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
+    </Grid>
+</Fluent:RibbonWindow>
