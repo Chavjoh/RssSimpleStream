@@ -5,24 +5,93 @@
     xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
     Title="MainWindow" 
     Width="500" 
-    Height="250" >
+    Height="250" 
+    ResizeMode="CanResizeWithGrip"
+    FlowDirection="LeftToRight">
+
+    <!-- 
+        COMMAND BINDING
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.New" Executed="NewCommand_Executed" CanExecute="NewCommand_CanExecute" />
+    </Window.CommandBindings> -->
+
     <Grid>
+        <!-- 
+            IMPORTANT :
+            Leave a space of the size of the ribbon for the window contents.
+        -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <!-- 
+            RIBBON :
+            Set of toolbars placed on several tabs
+        -->
         <Fluent:Ribbon>
-            <!--Backstage-->
+            <!-- Backstage -->
             <Fluent:Ribbon.Menu>
                 <Fluent:Backstage>
                 </Fluent:Backstage>
             </Fluent:Ribbon.Menu>
-            <!--Tabs-->
+            <!-- Tabs -->
             <Fluent:RibbonTabItem Header="Tab">
                 <Fluent:RibbonGroupBox Header="Group">
-                    <Fluent:Button Name="buttonGreen" Header="Green"
-Icon="Images\Green.png"
-LargeIcon="Images\GreenLarge.png" />
-                    <Fluent:Button Name="buttonGray" Header="Grey" Icon="Images\Gray.png"
-LargeIcon="Images\GrayLarge.png" />
+                    <Fluent:Button Name="buttonGreen" Header="Green" Icon="Images\Green.png" LargeIcon="Images\GreenLarge.png" />
+                    <Fluent:Button Name="buttonGray" Header="Grey" Icon="Images\Gray.png" LargeIcon="Images\GrayLarge.png" />
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
+
+        <!--
+            CONTENT
+        -->
+        <TabControl Grid.Row="1" Margin="5">
+            <TabControl.Resources>
+                <Style x:Key="ThemeButtonStyle"
+                       TargetType="Button">
+                    <Setter Property="Margin"
+                            Value="10" />
+                    <Setter Property="Width"
+                            Value="200" />
+                    <Setter Property="Height"
+                            Value="60" />
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Feed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <!--<TextBlock FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">Left side</TextBlock>-->
+                    <ListBox Name="icTodoList" HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="100" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Title}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                    
+                    <TextBlock Grid.Column="2" FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">Right side</TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Web">
+                <WebBrowser Source="http://html5test.com/" />
+            </TabItem>
+        </TabControl>
     </Grid>
 </Fluent:RibbonWindow>

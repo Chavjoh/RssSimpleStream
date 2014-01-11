@@ -24,6 +24,11 @@ namespace RSS_Simple_Stream
         public MainWindow()
         {
             InitializeComponent();
+
+            RssManager rssManager = new RssManager("http://www.pcinpact.com/rss/news.xml");
+            rssManager.loadFeed();
+
+            icTodoList.ItemsSource = rssManager.FeedItems;
         }
     }
 }

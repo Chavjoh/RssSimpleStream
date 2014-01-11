@@ -8,9 +8,9 @@ using System.Windows;
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
 [assembly: AssemblyTitle("RSS Simple Stream")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Feed aggregator")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Haute Ecole Arc")]
 [assembly: AssemblyProduct("RSS Simple Stream")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
