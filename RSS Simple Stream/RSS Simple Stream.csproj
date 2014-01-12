@@ -51,6 +51,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -68,8 +69,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="RssItem.cs" />
-    <Compile Include="RssManager.cs" />
+    <Compile Include="Category.cs" />
+    <Compile Include="CategoryManager.cs" />
+    <Compile Include="ItemManager.cs" />
+    <Compile Include="Loader.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="Subscription.cs" />
+    <Compile Include="SubscriptionManager.cs" />
+    <Compile Include="Tools.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

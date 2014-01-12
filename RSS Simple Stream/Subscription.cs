@@ -5,41 +5,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace RSS_Simple_Stream
 {
-    class RssManager
+    class Subscription
     {
         private string url;
-        private string feedTitle;
-        private string feedDescription;
-        private Collection<RssItem> feedItems = new Collection<RssItem>();
+        private string title;
+        private string description;
+        private ItemManager itemManager;
+        private Category parentCategory;
 
-#region Constructors
+        public const string UNDEFINED = "undefined";
 
-        /// <summary>
-        /// Empty constructor, allowing us to
-        /// instantiate our class and set our
-        /// url variable to an empty string
-        /// </summary>
-        public RssManager() : this(string.Empty)
+        #region Constructors
+
+        public Subscription(Category parentCategory, string feedUrl)
         {
-            
-        }
-
-        /// <summary>
-        /// Constructor allowing us to instantiate our class
-        /// and set the _url variable to a value
-        /// </summary>
-        /// <param name="feedUrl">The URL of the Rss feed</param>
-        public RssManager(string feedUrl)
-        {
+            this.parentCategory = parentCategory;
             this.url = feedUrl;
+            this.itemManager = new ItemManager(parentCategory);
         }
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
+
+        public Category Parent
+        {
+            get { return this.parentCategory; }
+        }
 
         public string Url
         {
@@ -47,24 +43,24 @@ namespace RSS_Simple_Stream
             set { this.url = value; }
         }
 
-        public Collection<RssItem> FeedItems
+        public ItemManager ItemManager
         {
-            get { return this.feedItems; }
+            get { return this.itemManager; }
         }
 
-        public string FeedTitle
+        public string Title
         {
-            get { return this.feedTitle; }
+            get { return this.title; }
         }
 
-        public string FeedDescription
+        public string Description
         {
-            get { return this.feedDescription; }
+            get { return this.description; }
         }
 
-#endregion
+        #endregion
 
-        public void loadFeed()
+        public void LoadFeed()
         {
             if (String.IsNullOrEmpty(this.url))
             {
@@ -76,8 +72,8 @@ namespace RSS_Simple_Stream
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(reader);
                 
-                this.feedTitle = ParseElements(xmlDocument.SelectSingleNode("//channel"), "title");
-                this.feedDescription = ParseElements(xmlDocument.SelectSingleNode("//channel"), "description");
+                this.title = ParseElements(xmlDocument.SelectSingleNode("//channel"), "title");
+                this.description = ParseElements(xmlDocument.SelectSingleNode("//channel"), "description");
 
                 ParseItems(xmlDocument);
             }
@@ -85,13 +81,13 @@ namespace RSS_Simple_Stream
 
         private void ParseItems(XmlDocument xmlDocument)
         {
-            this.feedItems.Clear();
+            this.itemManager.ItemList.Clear();
 
             XmlNodeList nodes = xmlDocument.SelectNodes("rss/channel/item");
 
             foreach (XmlNode node in nodes)
             {
-                RssItem item = new RssItem();
+                Item item = new Item();
                 item.Title = ParseElements(node, "title");
                 item.Description = ParseElements(node, "description");
                 item.Link = ParseElements(node, "link");
@@ -100,7 +96,13 @@ namespace RSS_Simple_Stream
                 DateTime.TryParse(ParseElements(node, "pubDate"), out date);
                 item.Date = date;
 
-                feedItems.Add(item);
+                string guid = ParseElements(node, "guid");
+                if (guid.Equals(UNDEFINED))
+                {
+                    guid = Tools.ComputeHash(item.ToString(), new SHA256CryptoServiceProvider());
+                }
+
+                this.itemManager.ItemList.Add(item);
             }
         }
 
@@ -114,7 +116,7 @@ namespace RSS_Simple_Stream
             }
             else
             {
-                return "Undefined";
+                return UNDEFINED;
             }
         }
 
@@ -122,7 +124,7 @@ namespace RSS_Simple_Stream
         {
             string toString = base.ToString();
 
-            foreach(RssItem rssItem in this.feedItems)
+            foreach(Item rssItem in this.itemManager.ItemList)
             {
                 toString += rssItem;
             }

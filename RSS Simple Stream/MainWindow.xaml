@@ -7,7 +7,7 @@
     Width="800" 
     Height="500" 
     MinHeight="300"
-    MinWidth="300"
+    MinWidth="600"
     ResizeMode="CanResizeWithGrip"
     FlowDirection="LeftToRight">
 
@@ -33,7 +33,25 @@
             RIBBON :
             Set of toolbars placed on several tabs
         -->
-        <Fluent:Ribbon>
+        <Fluent:Ribbon Name="mainRibbon">
+            <Fluent:Ribbon.ContextualGroups>
+
+                <Fluent:RibbonContextualTabGroup x:Name="tabCategory"
+                                                 Background="Purple"
+                                                 Header="Category"
+                                                 Visibility="Visible" />
+                
+                <Fluent:RibbonContextualTabGroup x:Name="tabSubscription"
+                                                 Background="#FF2B579A"
+                                                 Header="Subscription"
+                                                 Visibility="Visible" />
+                
+                <Fluent:RibbonContextualTabGroup x:Name="tabItem"
+                                                 Background="#FFF2CB1D"
+                                                 Header="Items"
+                                                 Visibility="Visible" />
+
+            </Fluent:Ribbon.ContextualGroups>
             <!-- Backstage -->
             <Fluent:Ribbon.Menu>
                 <Fluent:Backstage>
@@ -44,6 +62,25 @@
                 <Fluent:RibbonGroupBox Header="Group">
                     <Fluent:Button Name="buttonGreen" Header="Green" Icon="Images\Green.png" LargeIcon="Images\GreenLarge.png" />
                     <Fluent:Button Name="buttonGray" Header="Grey" Icon="Images\Gray.png" LargeIcon="Images\GrayLarge.png" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Name="RibbonTab_Category" Header="Manage" Group="{Binding ElementName=tabCategory, Mode=OneWay}">
+                <Fluent:RibbonGroupBox Header="Group">
+
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Name="RibbonTab_Subscription" Header="Manage" Group="{Binding ElementName=tabSubscription, Mode=OneWay}">
+                <Fluent:RibbonGroupBox Header="Group">
+                    <Fluent:TextBox x:Name="textBox"
+                                    InputWidth="70"
+                                    MaxLength="5"
+                                    Header="Search subscription"
+                                    Text="CurrentText" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Name="RibbonTab_Item" Header="Manage" Group="{Binding ElementName=tabItem, Mode=OneWay}">
+                <Fluent:RibbonGroupBox Header="Group">
+
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
@@ -64,14 +101,14 @@
                 </Style>
             </TabControl.Resources>
             <TabItem Header="Feed">
-                <Grid>
+                <Grid x:Name="ContentGrid">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250" />
+                        <ColumnDefinition Width="250" MinWidth="250" />
                         <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" MinWidth="250" />
                     </Grid.ColumnDefinitions>
                     
-                    <!--<TextBlock FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">Left side</TextBlock>-->
+                    <!--<TextBlock FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">Left side</TextBlock>
                     <ListBox Name="icTodoList" HorizontalContentAlignment="Stretch">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -84,11 +121,52 @@
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-                    </ListBox>
+                    </ListBox> -->
+                    
+                    <ListView Name="subscriptionList" SelectionChanged="subscriptionList_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" Width="175" DisplayMemberBinding="{Binding Title}" />
+                                <!-- <GridViewColumn Header="Unread" Width="50" DisplayMemberBinding="{Binding Unread}" /> -->
+                            </GridView>
+                        </ListView.View>
+
+                        <ListView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.ContainerStyle>
+                                    <Style TargetType="{x:Type GroupItem}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <Expander IsExpanded="True">
+                                                        <Expander.Header>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="Gray" VerticalAlignment="Bottom" />
+                                                                <!-- <TextBlock Text="{Binding ItemCount}" FontSize="16" Foreground="Gray" FontWeight="Bold" FontStyle="Italic" Margin="10,0,0,0" VerticalAlignment="Bottom" />
+                                                                <TextBlock Text=" item(s)" FontSize="16" Foreground="Silver" FontStyle="Italic" VerticalAlignment="Bottom" />-->
+                                                            </StackPanel>
+                                                        </Expander.Header>
+                                                        <ItemsPresenter />
+                                                    </Expander>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </GroupStyle.ContainerStyle>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                    </ListView>
 
                     <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-                    
-                    <TextBlock Grid.Column="2" FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">Right side</TextBlock>
+
+                    <ListView Name="itemList" Grid.Column="2">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" Width="175" DisplayMemberBinding="{Binding Title}" />
+                                <!-- <GridViewColumn Header="Unread" Width="50" DisplayMemberBinding="{Binding Unread}" /> -->
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Grid>
             </TabItem>
             <TabItem Header="Web">

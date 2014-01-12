@@ -21,14 +21,45 @@ namespace RSS_Simple_Stream
     /// </summary>
     public partial class MainWindow : RibbonWindow
     {
+
         public MainWindow()
         {
             InitializeComponent();
 
-            RssManager rssManager = new RssManager("http://www.pcinpact.com/rss/news.xml");
-            rssManager.loadFeed();
+            this.SizeChanged += (s, e) =>
+            {
+                double maxWidth = this.ActualWidth / 1.5;
+                this.ContentGrid.ColumnDefinitions[0].MaxWidth = maxWidth;
+            };
 
-            icTodoList.ItemsSource = rssManager.FeedItems;
+            CategoryManager categoryManager = new CategoryManager();
+            Category category = categoryManager.Add("Main");
+            SubscriptionManager subscriptionManager = category.SubscriptionManager;
+            Subscription subscription = subscriptionManager.Add("http://www.pcinpact.com/rss/news.xml");
+            ItemManager itemManager = subscription.ItemManager;
+            subscription.LoadFeed();
+
+            this.subscriptionList.ItemsSource = categoryManager.GetAllSubscription();
+
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(this.subscriptionList.ItemsSource);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("Parent.Name");
+            view.GroupDescriptions.Add(groupDescription);
+
+            this.RibbonTab_Item.Visibility = Visibility.Collapsed;
+            this.RibbonTab_Subscription.Visibility = Visibility.Collapsed;
+        }
+
+        private void subscriptionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.subscriptionList.SelectedItems != null)
+            {
+                Subscription currentSubscription = (Subscription)this.subscriptionList.SelectedItem;
+                MessageBox.Show(currentSubscription.Title);
+
+                this.RibbonTab_Subscription.Visibility = Visibility.Visible;
+
+                this.itemList.ItemsSource = currentSubscription.ItemManager.ItemList;
+            }
         }
     }
 }

@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace RSS_Simple_Stream
 {
-    class RssItem
+    class Item
     {
         private string title;
         private string description;
         private string link;
+        private string guid;
         private DateTime date;
 
         #region Properties 
@@ -47,7 +48,7 @@ namespace RSS_Simple_Stream
                 "title=" + this.title + ", " + 
                 "description=" + this.description + ", " + 
                 "link=" + this.link + ", " + 
-                "date=" + this.date + ") ";
+                "date=" + this.date + ")";
         }
     }
 }
