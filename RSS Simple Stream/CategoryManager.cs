@@ -40,11 +40,11 @@ namespace RSS_Simple_Stream
             return allSubscription;
         }
 
-        public Category Add(string name)
+        public Category Add(int id, string name)
         {
             // TODO: Check name
             // TODO: Check if exists already
-            Category category = new Category(name);
+            Category category = new Category(id, name);
 
             this.categoryList.Add(category);
 

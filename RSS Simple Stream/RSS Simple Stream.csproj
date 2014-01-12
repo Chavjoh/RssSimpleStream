@@ -51,6 +51,15 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.90.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.90.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -74,6 +83,7 @@
     <Compile Include="ItemManager.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="SQLiteDatabase.cs" />
     <Compile Include="Subscription.cs" />
     <Compile Include="SubscriptionManager.cs" />
     <Compile Include="Tools.cs" />
@@ -139,6 +149,50 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\refresh_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cross_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\refresh_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\feed_add_16x16.png" />
+    <Resource Include="Images\feed_add_32x32.png" />
+    <Resource Include="Images\feed_delete_16x16.png" />
+    <Resource Include="Images\feed_delete_32x32.png" />
+    <Resource Include="Images\folder_add_16x16.png" />
+    <Resource Include="Images\folder_add_32x32.png" />
+    <Resource Include="Images\folder_delete_16x16.png" />
+    <Resource Include="Images\folder_delete_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\folder_feed_16x16.png" />
+    <Resource Include="Images\folder_feed_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\quit_16x16.png" />
+    <Resource Include="Images\quit_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cross_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\facebook_16x16.png" />
+    <Resource Include="Images\facebook_32x32.png" />
+    <Resource Include="Images\twitter_16x16.png" />
+    <Resource Include="Images\twitter_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\google_plus_16x16.png" />
+    <Resource Include="Images\google_plus_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\tab_delete_16x16.png" />
+    <Resource Include="Images\tab_delete_32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

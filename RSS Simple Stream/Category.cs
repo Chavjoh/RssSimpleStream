@@ -8,13 +8,15 @@ namespace RSS_Simple_Stream
 {
     class Category
     {
+        private int id;
         private string name;
         private SubscriptionManager subscriptionManager;
 
         #region Constructors 
 
-        public Category(string name)
+        public Category(int id, string name)
         {
+            this.id = id;
             this.name = name;
             this.subscriptionManager = new SubscriptionManager(this);
         }
@@ -22,6 +24,11 @@ namespace RSS_Simple_Stream
         #endregion
 
         #region Properties
+
+        public int Id
+        {
+            get { return this.id; }
+        }
 
         public string Name
         {

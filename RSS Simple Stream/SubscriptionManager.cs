@@ -46,6 +46,7 @@ namespace RSS_Simple_Stream
             Subscription subscription = new Subscription(this.parentCategory, url);
 
             this.subscriptionList.Add(subscription);
+            subscription.LoadFeed();
 
             return subscription;
         }

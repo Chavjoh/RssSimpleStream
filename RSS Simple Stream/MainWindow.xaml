@@ -3,22 +3,27 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
-    Title="MainWindow" 
+    Title="RSS Simple Stream" 
     Width="800" 
     Height="500" 
     MinHeight="300"
     MinWidth="600"
     ResizeMode="CanResizeWithGrip"
     FlowDirection="LeftToRight">
-
     <!-- 
         COMMAND BINDING
     
-    <Window.CommandBindings>
+    <Fluent:RibbonWindow.CommandBindings>
+        <CommandBinding Command="RSS_Simple_Stream:MainWindow.refreshSubscriptionFeed"
+                        Executed="New_Executed"
+                        CanExecute="New_CanExecute" />
+    </Fluent:RibbonWindow.CommandBindings> 
+    -->
+    <!-- <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.New" Executed="NewCommand_Executed" CanExecute="NewCommand_CanExecute" />
     </Window.CommandBindings> -->
 
-    <Grid>
+    <Grid Name="contentGrid">
         <!-- 
             IMPORTANT :
             Leave a space of the size of the ribbon for the window contents.
@@ -48,39 +53,59 @@
                 
                 <Fluent:RibbonContextualTabGroup x:Name="tabItem"
                                                  Background="#FFF2CB1D"
-                                                 Header="Items"
+                                                 Header="Item"
                                                  Visibility="Visible" />
 
             </Fluent:Ribbon.ContextualGroups>
-            <!-- Backstage -->
+            <!-- Backstage 
             <Fluent:Ribbon.Menu>
                 <Fluent:Backstage>
                 </Fluent:Backstage>
             </Fluent:Ribbon.Menu>
+            -->
             <!-- Tabs -->
-            <Fluent:RibbonTabItem Header="Tab">
-                <Fluent:RibbonGroupBox Header="Group">
-                    <Fluent:Button Name="buttonGreen" Header="Green" Icon="Images\Green.png" LargeIcon="Images\GreenLarge.png" />
-                    <Fluent:Button Name="buttonGray" Header="Grey" Icon="Images\Gray.png" LargeIcon="Images\GrayLarge.png" />
+            <Fluent:RibbonTabItem Header="Home">
+                <!--<Fluent:RibbonGroupBox Header="Subscription">
+                    <Fluent:Button Name="subscriptionImport" Header="Import subscription list" Icon="Images\Green.png" LargeIcon="Images\GreenLarge.png" />
+                    <Fluent:Button Name="subscriptionExport" Header="Export subscription list" Icon="Images\Gray.png" LargeIcon="Images\GrayLarge.png" />
+                </Fluent:RibbonGroupBox>-->
+                <Fluent:RibbonGroupBox Header="">
+                    <Fluent:Button Click="tabClose_Click" Name="tabClose" Header="Close current tab" Icon="Images\tab_delete_16x16.png" LargeIcon="Images\tab_delete_32x32.png" Visibility="Collapsed" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="">
+                    <Fluent:Button Name="AppQuit" Header="Quit application" Icon="Images\quit_16x16.png" LargeIcon="Images\quit_32x32.png" />
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Name="RibbonTab_Category" Header="Manage" Group="{Binding ElementName=tabCategory, Mode=OneWay}">
-                <Fluent:RibbonGroupBox Header="Group">
-
+                <Fluent:RibbonGroupBox Header="Category">
+                    <Fluent:Button Name="categoryManage" Header="Manage" Icon="Images\folder_feed_16x16.png" LargeIcon="Images\folder_feed_32x32.png" />
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Name="RibbonTab_Subscription" Header="Manage" Group="{Binding ElementName=tabSubscription, Mode=OneWay}">
-                <Fluent:RibbonGroupBox Header="Group">
-                    <Fluent:TextBox x:Name="textBox"
+                <Fluent:RibbonGroupBox Header="Feed">
+                    <Fluent:Button Click="subscriptionRefresh_Click" Name="subscriptionRefresh" Header="Refresh current subscription" Icon="Images\refresh_16x16.png" LargeIcon="Images\refresh_32x32.png" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Subscription">
+                    <Fluent:Button Name="subscriptionAdd" Header="Add a subscription" Icon="Images\feed_add_16x16.png" LargeIcon="Images\feed_add_32x32.png" />
+                    <Fluent:Button Name="subscriptionDelete" Header="Delete current subscription" Icon="Images\feed_delete_16x16.png" LargeIcon="Images\feed_delete_32x32.png" />
+                    
+                    <!--<Fluent:TextBox x:Name="textBox"
                                     InputWidth="70"
                                     MaxLength="5"
                                     Header="Search subscription"
-                                    Text="CurrentText" />
+                                    Text="CurrentText" /> -->
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
-            <Fluent:RibbonTabItem Name="RibbonTab_Item" Header="Manage" Group="{Binding ElementName=tabItem, Mode=OneWay}">
+            <Fluent:RibbonTabItem Name="RibbonTab_ItemManage" Header="Manage" Group="{Binding ElementName=tabItem, Mode=OneWay}">
                 <Fluent:RibbonGroupBox Header="Group">
 
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Name="RibbonTab_ItemShare" Header="Share" Group="{Binding ElementName=tabItem, Mode=OneWay}">
+                <Fluent:RibbonGroupBox Header="Share">
+                    <Fluent:Button Click="itemShare_Facebook_Click" Name="itemShare_Facebook" Header="Share on Facebook" Icon="Images\facebook_16x16.png" LargeIcon="Images\facebook_32x32.png" />
+                    <Fluent:Button Click="itemShare_Twitter_Click" Name="itemShare_Twitter" Header="Share on Twitter" Icon="Images\twitter_16x16.png" LargeIcon="Images\twitter_32x32.png" />
+                    <Fluent:Button Click="itemShare_Google_Click" Name="itemShare_Google" Header="Share on Google+" Icon="Images\google_plus_16x16.png" LargeIcon="Images\google_plus_32x32.png" />
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
@@ -88,7 +113,7 @@
         <!--
             CONTENT
         -->
-        <TabControl Grid.Row="1" Margin="5">
+        <TabControl Name="contentTabControl" Grid.Row="1" Margin="5" SelectionChanged="contentTabControl_SelectionChanged">
             <TabControl.Resources>
                 <Style x:Key="ThemeButtonStyle"
                        TargetType="Button">
@@ -107,21 +132,6 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="*" MinWidth="250" />
                     </Grid.ColumnDefinitions>
-                    
-                    <!--<TextBlock FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">Left side</TextBlock>
-                    <ListBox Name="icTodoList" HorizontalContentAlignment="Stretch">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="0,2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="100" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding Title}" />
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox> -->
                     
                     <ListView Name="subscriptionList" SelectionChanged="subscriptionList_SelectionChanged">
                         <ListView.View>
@@ -159,7 +169,7 @@
 
                     <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 
-                    <ListView Name="itemList" Grid.Column="2">
+                    <ListView Name="itemList" Grid.Column="2" MouseDoubleClick="itemList_MouseDoubleClick" SelectionChanged="itemList_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Name" Width="175" DisplayMemberBinding="{Binding Title}" />
@@ -169,9 +179,11 @@
                     </ListView>
                 </Grid>
             </TabItem>
+            <!-- FOR HTML TEST WITH WEBBROWSER
             <TabItem Header="Web">
                 <WebBrowser Source="http://html5test.com/" />
             </TabItem>
+            -->
         </TabControl>
     </Grid>
 </Fluent:RibbonWindow>
