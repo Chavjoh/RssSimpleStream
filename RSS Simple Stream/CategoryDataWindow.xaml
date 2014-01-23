@@ -1,0 +1,14 @@
+﻿<Window x:Class="RSS_Simple_Stream.CategoryDataWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Manage a category" 
+        Height="87" 
+        Width="200" 
+        Padding="5"
+        ResizeMode="NoResize">
+    <StackPanel>
+        <TextBlock Text="Category name :" />
+        <TextBox x:Name="nameCategory" />
+        <Button Name="buttonOk" Content="OK" Click="buttonOk_Click" />
+    </StackPanel>
+</Window>
