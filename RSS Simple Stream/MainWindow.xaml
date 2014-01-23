@@ -78,7 +78,7 @@
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Name="RibbonTab_Category" Header="Manage" Group="{Binding ElementName=tabCategory, Mode=OneWay}">
                 <Fluent:RibbonGroupBox Header="Category">
-                    <Fluent:Button Name="categoryManage" Header="Manage" Icon="Images\folder_feed_16x16.png" LargeIcon="Images\folder_feed_32x32.png" />
+                    <Fluent:Button Name="categoryManage" Header="Manage" Icon="Images\folder_feed_16x16.png" LargeIcon="Images\folder_feed_32x32.png" Click="categoryManage_Click" />
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Name="RibbonTab_Subscription" Header="Manage" Group="{Binding ElementName=tabSubscription, Mode=OneWay}">

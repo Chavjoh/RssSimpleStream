@@ -6,16 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.Windows;
 
 namespace RSS_Simple_Stream
 {
     class Subscription
     {
         private string url;
-        private string title;
-        private string description;
-        private ItemManager itemManager;
+        private volatile string title;
+        private volatile string description;
+        private volatile ItemManager itemManager;
         private Category parentCategory;
+        private event EventHandler progressUpdate;
 
         public const string UNDEFINED = "undefined";
 
@@ -58,6 +60,12 @@ namespace RSS_Simple_Stream
             get { return this.description; }
         }
 
+        public EventHandler ProgressUpdate
+        {
+            get { return this.progressUpdate; }
+            set { this.progressUpdate = value; }
+        }
+
         #endregion
 
         public void LoadFeed()
@@ -67,15 +75,28 @@ namespace RSS_Simple_Stream
                 throw new ArgumentException("URL must be provided");
             }
 
-            using (XmlReader reader = XmlReader.Create(this.url))
+            try
             {
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(reader);
-                
-                this.title = ParseElements(xmlDocument.SelectSingleNode("//channel"), "title");
-                this.description = ParseElements(xmlDocument.SelectSingleNode("//channel"), "description");
+                using (XmlReader reader = XmlReader.Create(this.url))
+                {
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(reader);
 
-                ParseItems(xmlDocument);
+                    this.title = ParseElements(xmlDocument.SelectSingleNode("//channel"), "title");
+                    this.description = ParseElements(xmlDocument.SelectSingleNode("//channel"), "description");
+
+                    ParseItems(xmlDocument);
+                }
+
+                if (progressUpdate != null)
+                    progressUpdate(this, EventArgs.Empty);
+            }
+            catch (Exception e)
+            {
+                // When error occurred with database loading
+                String error = "The following error has occurred:\n\n";
+                error += e.Message.ToString() + "\n\n";
+                MessageBox.Show(error);
             }
         }
 

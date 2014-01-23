@@ -6,17 +6,14 @@ using System.Windows;
 
 namespace RSS_Simple_Stream
 {
+    /// <summary>
+    /// SQLite database management 
+    /// From brennydoogles tutorial :
+    /// http://www.dreamincode.net/forums/topic/157830-using-sqlite-with-c%23/
+    /// </summary>
     class SQLiteDatabase
     {
         String dbConnection;
-
-        /// <summary>
-        ///     Default Constructor for SQLiteDatabase Class.
-        /// </summary>
-        public SQLiteDatabase()
-        {
-            dbConnection = "Data Source=recipes.s3db";
-        }
 
         /// <summary>
         ///     Single Param Constructor for specifying the DB file.
@@ -34,10 +31,12 @@ namespace RSS_Simple_Stream
         public SQLiteDatabase(Dictionary<String, String> connectionOpts)
         {
             String str = "";
+
             foreach (KeyValuePair<String, String> row in connectionOpts)
             {
                 str += String.Format("{0}={1}; ", row.Key, row.Value);
             }
+
             str = str.Trim().Substring(0, str.Length - 1);
             dbConnection = str;
         }
@@ -50,14 +49,18 @@ namespace RSS_Simple_Stream
         public DataTable GetDataTable(string sql)
         {
             DataTable dt = new DataTable();
+
             try
             {
                 SQLiteConnection cnn = new SQLiteConnection(dbConnection);
                 cnn.Open();
+
                 SQLiteCommand mycommand = new SQLiteCommand(cnn);
                 mycommand.CommandText = sql;
+
                 SQLiteDataReader reader = mycommand.ExecuteReader();
                 dt.Load(reader);
+
                 reader.Close();
                 cnn.Close();
             }
@@ -65,6 +68,7 @@ namespace RSS_Simple_Stream
             {
                 throw new Exception(e.Message);
             }
+
             return dt;
         }
 
@@ -77,10 +81,12 @@ namespace RSS_Simple_Stream
         {
             SQLiteConnection cnn = new SQLiteConnection(dbConnection);
             cnn.Open();
+
             SQLiteCommand mycommand = new SQLiteCommand(cnn);
             mycommand.CommandText = sql;
             int rowsUpdated = mycommand.ExecuteNonQuery();
             cnn.Close();
+
             return rowsUpdated;
         }
 
@@ -93,14 +99,17 @@ namespace RSS_Simple_Stream
         {
             SQLiteConnection cnn = new SQLiteConnection(dbConnection);
             cnn.Open();
+
             SQLiteCommand mycommand = new SQLiteCommand(cnn);
             mycommand.CommandText = sql;
             object value = mycommand.ExecuteScalar();
             cnn.Close();
+
             if (value != null)
             {
                 return value.ToString();
             }
+
             return "";
         }
 
@@ -115,6 +124,7 @@ namespace RSS_Simple_Stream
         {
             String vals = "";
             Boolean returnCode = true;
+
             if (data.Count >= 1)
             {
                 foreach (KeyValuePair<String, String> val in data)
@@ -123,6 +133,7 @@ namespace RSS_Simple_Stream
                 }
                 vals = vals.Substring(0, vals.Length - 1);
             }
+
             try
             {
                 this.ExecuteNonQuery(String.Format("update {0} set {1} where {2};", tableName, vals, where));
@@ -131,6 +142,7 @@ namespace RSS_Simple_Stream
             {
                 returnCode = false;
             }
+
             return returnCode;
         }
 
@@ -152,6 +164,7 @@ namespace RSS_Simple_Stream
                 MessageBox.Show(fail.Message);
                 returnCode = false;
             }
+            
             return returnCode;
         }
 
@@ -166,13 +179,16 @@ namespace RSS_Simple_Stream
             String columns = "";
             String values = "";
             Boolean returnCode = true;
+            
             foreach (KeyValuePair<String, String> val in data)
             {
                 columns += String.Format(" {0},", val.Key.ToString());
                 values += String.Format(" '{0}',", val.Value);
             }
+
             columns = columns.Substring(0, columns.Length - 1);
             values = values.Substring(0, values.Length - 1);
+            
             try
             {
                 this.ExecuteNonQuery(String.Format("insert into {0}({1}) values({2});", tableName, columns, values));
@@ -182,6 +198,7 @@ namespace RSS_Simple_Stream
                 MessageBox.Show(fail.Message);
                 returnCode = false;
             }
+
             return returnCode;
         }
 
@@ -195,10 +212,12 @@ namespace RSS_Simple_Stream
             try
             {
                 tables = this.GetDataTable("select NAME from SQLITE_MASTER where type='table' order by NAME;");
+                
                 foreach (DataRow table in tables.Rows)
                 {
                     this.ClearTable(table["NAME"].ToString());
                 }
+
                 return true;
             }
             catch
@@ -216,7 +235,6 @@ namespace RSS_Simple_Stream
         {
             try
             {
-
                 this.ExecuteNonQuery(String.Format("delete from {0};", table));
                 return true;
             }

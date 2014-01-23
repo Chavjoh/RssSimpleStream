@@ -22,6 +22,10 @@ namespace RSS_Simple_Stream
         public CategoryWindow()
         {
             InitializeComponent();
+
+            CategoryManager categoryManager = CategoryManager.getInstance();
+
+            this.categoryList.ItemsSource = categoryManager.CategoryList;
         }
     }
 }

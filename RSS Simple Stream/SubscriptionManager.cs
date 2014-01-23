@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RSS_Simple_Stream
@@ -46,7 +47,6 @@ namespace RSS_Simple_Stream
             Subscription subscription = new Subscription(this.parentCategory, url);
 
             this.subscriptionList.Add(subscription);
-            subscription.LoadFeed();
 
             return subscription;
         }

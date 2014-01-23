@@ -9,12 +9,21 @@ namespace RSS_Simple_Stream
     class CategoryManager
     {
         private List<Category> categoryList;
+        private static CategoryManager instance = null;
 
         #region Constructors
 
-        public CategoryManager()
+        private CategoryManager()
         {
             this.categoryList = new List<Category>();
+        }
+
+        public static CategoryManager getInstance()
+        {
+            if (instance == null)
+                instance = new CategoryManager();
+
+            return instance;
         }
 
         #endregion

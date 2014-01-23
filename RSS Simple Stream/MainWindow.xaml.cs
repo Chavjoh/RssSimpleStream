@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Data;
 using System.Data.SQLite;
 using System.Web;
+using System.Threading;
 
 namespace RSS_Simple_Stream
 {
@@ -48,7 +49,7 @@ namespace RSS_Simple_Stream
             };
 
             // Create main manager
-            CategoryManager categoryManager = new CategoryManager();
+            CategoryManager categoryManager = CategoryManager.getInstance();
 
             try
             {
@@ -92,7 +93,16 @@ namespace RSS_Simple_Stream
                     }
 
                     // Add current subscription to the category
-                    currentCategory.SubscriptionManager.Add((string) r["url_subscription"]);
+                    Subscription subscription = currentCategory.SubscriptionManager.Add((string) r["url_subscription"]);
+
+                    // Invoke refresh category list when load is finished
+                    subscription.ProgressUpdate += (s, e) => {
+                        Dispatcher.Invoke((Action)delegate() { refreshCategoryList(); });
+                    };
+
+                    // Start loading in a new thread
+                    Thread workerThread = new Thread(subscription.LoadFeed);
+                    workerThread.Start();
                 }
             }
             catch(Exception e)
@@ -115,6 +125,14 @@ namespace RSS_Simple_Stream
             this.RibbonTab_ItemManage.Visibility = Visibility.Collapsed;
             this.RibbonTab_ItemShare.Visibility = Visibility.Collapsed;
             this.RibbonTab_Subscription.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Refresh category list when changed is made
+        /// </summary>
+        public void refreshCategoryList()
+        {
+            this.subscriptionList.Items.Refresh();
         }
 
         /// <summary>
@@ -308,6 +326,12 @@ namespace RSS_Simple_Stream
             {
                 CloseTab((TabItem)this.contentTabControl.SelectedItem);
             }
+        }
+
+        private void categoryManage_Click(object sender, RoutedEventArgs e)
+        {
+            CategoryWindow categoryWindow = new CategoryWindow();
+            categoryWindow.ShowDialog();
         }
     }
 }
