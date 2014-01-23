@@ -53,64 +53,27 @@ namespace RSS_Simple_Stream
 
             try
             {
-                // Database connexion
-                SQLiteDatabase db = new SQLiteDatabase("database.sqlite");
+                // Load all categories and subscriptions
+                categoryManager.LoadAll();
 
-                // Query to retrieve category and subscription
-                string query = @"
-                SELECT 
-                    c.id_category, 
-                    c.name_category,
-                    s.id_subscription,
-                    s.title_subscription,
-                    s.url_subscription
-                FROM 
-                    category AS c
-                LEFT JOIN
-                    subscription AS s
-                ON
-                    c.id_category = s.id_category
-                ORDER BY 
-                    c.name_category";
-
-                // Get result of the query in DataTable
-                DataTable dataCategory = db.GetDataTable(query);
-
-                // Storing the previous category to know when we change to the next.
-                Category currentCategory = null;
-                
-                // For each category
-                foreach (DataRow r in dataCategory.Rows)
+                // Load all RSS items
+                categoryManager.GetAllSubscription().ForEach(delegate(Subscription subscription)
                 {
-                    // When we're in a new category
-                    if (currentCategory == null || currentCategory.Id != int.Parse(r["id_category"].ToString()))
-                    {
-                        // Add and store the new category
-                        currentCategory = categoryManager.Add(
-                            int.Parse(r["id_category"].ToString()), 
-                            (string) r["name_category"]
-                        );
-                    }
-
-                    // Add current subscription to the category
-                    Subscription subscription = currentCategory.SubscriptionManager.Add((string) r["url_subscription"]);
-
                     // Invoke refresh category list when load is finished
-                    subscription.ProgressUpdate += (s, e) => {
+                    subscription.ProgressUpdate += (s, e) =>
+                    {
                         Dispatcher.Invoke((Action)delegate() { refreshCategoryList(); });
                     };
 
                     // Start loading in a new thread
                     Thread workerThread = new Thread(subscription.LoadFeed);
                     workerThread.Start();
-                }
+                });
             }
             catch(Exception e)
             {
                 // When error occurred with database loading
-                String error = "The following error has occurred:\n\n";
-                error += e.Message.ToString() + "\n\n";
-                MessageBox.Show(error);
+                Console.WriteLine("The following error has occurred:\n\n" + e.Message.ToString() + "\n\n");
             }
 
             // Bind subscription list with ListView
@@ -298,7 +261,7 @@ namespace RSS_Simple_Stream
             else
             {
                 // Show tab about items
-                this.RibbonTab_ItemManage.Visibility = Visibility.Visible;
+                // this.RibbonTab_ItemManage.Visibility = Visibility.Visible;
                 this.RibbonTab_ItemShare.Visibility = Visibility.Visible;
             }
         }
@@ -332,6 +295,13 @@ namespace RSS_Simple_Stream
         {
             CategoryWindow categoryWindow = new CategoryWindow();
             categoryWindow.ShowDialog();
+            refreshCategoryList();
+        }
+
+        private void RibbonWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Close connection
+            SQLiteDatabase.getInstance(Settings.SQLITE_DATABASE).closeConnection();
         }
     }
 }

@@ -8,37 +8,56 @@ namespace RSS_Simple_Stream
 {
     /// <summary>
     /// SQLite database management 
-    /// From brennydoogles tutorial :
+    /// Modified from brennydoogles tutorial
     /// http://www.dreamincode.net/forums/topic/157830-using-sqlite-with-c%23/
     /// </summary>
     class SQLiteDatabase
     {
-        String dbConnection;
+        private String file;
+        private String dbConnection;
+        private SQLiteConnection connection;
+
+        private static Dictionary<String, SQLiteDatabase> instances = new Dictionary<string,SQLiteDatabase>();
 
         /// <summary>
         ///     Single Param Constructor for specifying the DB file.
         /// </summary>
         /// <param name="inputFile">The File containing the DB</param>
-        public SQLiteDatabase(String inputFile)
+        private SQLiteDatabase(String inputFile)
         {
-            dbConnection = String.Format("Data Source={0}", inputFile);
+            this.file = inputFile;
+            this.dbConnection = String.Format("Data Source={0}", inputFile);
+
+            connection = new SQLiteConnection(dbConnection);
+            connection.Open();
         }
 
         /// <summary>
-        ///     Single Param Constructor for specifying advanced connection options.
+        /// Get instance of SQLite Database manager for file given
         /// </summary>
-        /// <param name="connectionOpts">A dictionary containing all desired options and their values</param>
-        public SQLiteDatabase(Dictionary<String, String> connectionOpts)
+        /// <param name="file">The File containing the DB</param>
+        /// <returns>Corresponding instance of SQL Database management</returns>
+        public static SQLiteDatabase getInstance(string file)
         {
-            String str = "";
-
-            foreach (KeyValuePair<String, String> row in connectionOpts)
+            if (!instances.ContainsKey(file))
             {
-                str += String.Format("{0}={1}; ", row.Key, row.Value);
+                instances.Add(file, new SQLiteDatabase(file));
             }
 
-            str = str.Trim().Substring(0, str.Length - 1);
-            dbConnection = str;
+            return instances[file];
+        }
+
+        /// <summary>
+        /// Close current SQLite Connection
+        /// </summary>
+        public void closeConnection()
+        {
+            if (instances.ContainsKey(this.file))
+            {
+                instances.Remove(this.file);
+            }
+
+            connection.Close();
         }
 
         /// <summary>
@@ -52,17 +71,13 @@ namespace RSS_Simple_Stream
 
             try
             {
-                SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-                cnn.Open();
-
-                SQLiteCommand mycommand = new SQLiteCommand(cnn);
+                SQLiteCommand mycommand = new SQLiteCommand(connection);
                 mycommand.CommandText = sql;
 
                 SQLiteDataReader reader = mycommand.ExecuteReader();
                 dt.Load(reader);
 
                 reader.Close();
-                cnn.Close();
             }
             catch (Exception e)
             {
@@ -79,13 +94,9 @@ namespace RSS_Simple_Stream
         /// <returns>An Integer containing the number of rows updated.</returns>
         public int ExecuteNonQuery(string sql)
         {
-            SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-            cnn.Open();
-
-            SQLiteCommand mycommand = new SQLiteCommand(cnn);
+            SQLiteCommand mycommand = new SQLiteCommand(connection);
             mycommand.CommandText = sql;
             int rowsUpdated = mycommand.ExecuteNonQuery();
-            cnn.Close();
 
             return rowsUpdated;
         }
@@ -97,13 +108,9 @@ namespace RSS_Simple_Stream
         /// <returns>A string.</returns>
         public string ExecuteScalar(string sql)
         {
-            SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-            cnn.Open();
-
-            SQLiteCommand mycommand = new SQLiteCommand(cnn);
+            SQLiteCommand mycommand = new SQLiteCommand(connection);
             mycommand.CommandText = sql;
             object value = mycommand.ExecuteScalar();
-            cnn.Close();
 
             if (value != null)
             {
@@ -136,7 +143,7 @@ namespace RSS_Simple_Stream
 
             try
             {
-                this.ExecuteNonQuery(String.Format("update {0} set {1} where {2};", tableName, vals, where));
+                this.ExecuteNonQuery(String.Format("UPDATE {0} SET {1} WHERE {2};", tableName, vals, where));
             }
             catch
             {
@@ -157,7 +164,7 @@ namespace RSS_Simple_Stream
             Boolean returnCode = true;
             try
             {
-                this.ExecuteNonQuery(String.Format("delete from {0} where {1};", tableName, where));
+                this.ExecuteNonQuery(String.Format("DELETE FROM {0} WHERE {1};", tableName, where));
             }
             catch (Exception fail)
             {
@@ -173,13 +180,12 @@ namespace RSS_Simple_Stream
         /// </summary>
         /// <param name="tableName">The table into which we insert the data.</param>
         /// <param name="data">A dictionary containing the column names and data for the insert.</param>
-        /// <returns>A boolean true or false to signify success or failure.</returns>
-        public bool Insert(String tableName, Dictionary<String, String> data)
+        /// <returns>The last inserted ID.</returns>
+        public int Insert(String tableName, Dictionary<String, String> data)
         {
             String columns = "";
             String values = "";
-            Boolean returnCode = true;
-            
+
             foreach (KeyValuePair<String, String> val in data)
             {
                 columns += String.Format(" {0},", val.Key.ToString());
@@ -191,15 +197,15 @@ namespace RSS_Simple_Stream
             
             try
             {
-                this.ExecuteNonQuery(String.Format("insert into {0}({1}) values({2});", tableName, columns, values));
+                this.ExecuteNonQuery(String.Format("INSERT INTO {0}({1}) VALUES({2});", tableName, columns, values));
+                string id = this.ExecuteScalar("SELECT last_insert_rowid()");
+                return int.Parse(id);
             }
             catch (Exception fail)
             {
                 MessageBox.Show(fail.Message);
-                returnCode = false;
+                return 0;
             }
-
-            return returnCode;
         }
 
         /// <summary>
@@ -235,7 +241,7 @@ namespace RSS_Simple_Stream
         {
             try
             {
-                this.ExecuteNonQuery(String.Format("delete from {0};", table));
+                this.ExecuteNonQuery(String.Format("DELETE FROM {0};", table));
                 return true;
             }
             catch

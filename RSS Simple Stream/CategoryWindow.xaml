@@ -10,18 +10,18 @@
                 </Style>
             </StackPanel.Resources>
             <TextBlock FontWeight="Bold" Margin="0,0,0,10">Category</TextBlock>
-            <Button Name="btnShowSelectedItem">Add</Button>
-            <Button Name="btnSelectLast">Edit</Button>
-            <Button Name="btnSelectNext">Delete</Button>
+            <Button Name="buttonAdd" Click="buttonAdd_Click">Add</Button>
+            <Button Name="buttonEdit" Click="buttonEdit_Click">Edit</Button>
+            <Button Name="buttonDelete" Click="buttonDelete_Click">Delete</Button>
         </StackPanel>
-        <ListBox Name="categoryList" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+        <ListBox Name="categoryList" HorizontalContentAlignment="Stretch" SelectionMode="Extended" SelectionChanged="categoryList_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Title}" />
+                        <TextBlock Text="{Binding Name}" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

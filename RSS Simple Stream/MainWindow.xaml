@@ -9,7 +9,7 @@
     MinHeight="300"
     MinWidth="600"
     ResizeMode="CanResizeWithGrip"
-    FlowDirection="LeftToRight">
+    FlowDirection="LeftToRight" Closing="RibbonWindow_Closing">
     <!-- 
         COMMAND BINDING
     

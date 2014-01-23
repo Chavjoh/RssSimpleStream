@@ -79,6 +79,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Category.cs" />
+    <Compile Include="CategoryDataWindow.xaml.cs">
+      <DependentUpon>CategoryDataWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CategoryManager.cs" />
     <Compile Include="CategoryWindow.xaml.cs">
       <DependentUpon>CategoryWindow.xaml</DependentUpon>
@@ -86,10 +89,15 @@
     <Compile Include="ItemManager.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SQLiteDatabase.cs" />
     <Compile Include="Subscription.cs" />
     <Compile Include="SubscriptionManager.cs" />
     <Compile Include="Tools.cs" />
+    <Page Include="CategoryDataWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CategoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
