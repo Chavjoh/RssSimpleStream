@@ -21,7 +21,7 @@ using System.Threading;
 namespace RSS_Simple_Stream
 {
     /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : RibbonWindow
     {
@@ -62,7 +62,7 @@ namespace RSS_Simple_Stream
                     // Invoke refresh category list when load is finished
                     subscription.ProgressUpdate += (s, e) =>
                     {
-                        Dispatcher.Invoke((Action)delegate() { refreshCategoryList(); });
+                        Dispatcher.Invoke((Action)delegate() { refreshSubscriptionList(); });
                     };
 
                     // Start loading in a new thread
@@ -81,7 +81,7 @@ namespace RSS_Simple_Stream
 
             // Indicate which properties is the group
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(this.subscriptionList.ItemsSource);
-            PropertyGroupDescription groupDescription = new PropertyGroupDescription("Parent.Name");
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("Manager.Parent.Name");
             view.GroupDescriptions.Add(groupDescription);
 
             // Hide specific ribbon tab
@@ -93,7 +93,7 @@ namespace RSS_Simple_Stream
         /// <summary>
         /// Refresh category list when changed is made
         /// </summary>
-        public void refreshCategoryList()
+        public void refreshSubscriptionList()
         {
             this.subscriptionList.Items.Refresh();
         }
@@ -192,10 +192,37 @@ namespace RSS_Simple_Stream
             AddBrowerTab(rssItem.Title, rssItem.Link);
         }
 
+        #region RIBBON TAB - SUBSCRIPTION
+
         private void subscriptionRefresh_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("REFRESH");
+            // Check if a subscription is selected
+            if (this.subscriptionList.SelectedItem == null)
+                return;
+
+            // Get the current subscription selected
+            Subscription subscription = (Subscription)this.subscriptionList.SelectedItem;
+
+            // Start loading in a new thread
+            Thread workerThread = new Thread(subscription.LoadFeed);
+            workerThread.Start();
         }
+
+        private void subscriptionDelete_Click(object sender, RoutedEventArgs e)
+        {
+            // Check if a subscription is selected
+            if (this.subscriptionList.SelectedItem == null)
+                return;
+
+            // Get the current subscription selected
+            Subscription subscription = (Subscription)this.subscriptionList.SelectedItem;
+
+            
+        }
+
+        #endregion
+
+        #region RIBBON TAB - SHARE
 
         private void itemShare_Facebook_Click(object sender, RoutedEventArgs e)
         {
@@ -249,6 +276,8 @@ namespace RSS_Simple_Stream
             AddBrowerTab("Share", url);
         }
 
+        #endregion
+
         private void itemList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // If no item is selected
@@ -295,13 +324,58 @@ namespace RSS_Simple_Stream
         {
             CategoryWindow categoryWindow = new CategoryWindow();
             categoryWindow.ShowDialog();
-            refreshCategoryList();
+
+            refreshSubscriptionList();
         }
 
         private void RibbonWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Close connection
             SQLiteDatabase.getInstance(Settings.SQLITE_DATABASE).closeConnection();
+        }
+
+        private void AppAbout_Click(object sender, RoutedEventArgs e)
+        {
+            AboutWindow aboutWindow = new AboutWindow();
+            aboutWindow.ShowDialog();
+        }
+
+        private void AppQuit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void subscriptionAdd_Click(object sender, RoutedEventArgs e)
+        {
+            CategoryManager categoryManager = CategoryManager.getInstance();
+            
+            // Check if at least one category exists
+            if (categoryManager.CategoryList.Count > 0)
+            {
+                // Open a new window to add a new subscription
+                SubscriptionDataWindow subscriptionWindow = new SubscriptionDataWindow();
+                subscriptionWindow.ShowDialog();
+
+                // Get inserted subscription from the window
+                Subscription insertedSubscription = subscriptionWindow.InsertedSubscription;
+
+                if (insertedSubscription != null)
+                {
+                    // Invoke refresh category list when load is finished
+                    insertedSubscription.ProgressUpdate += (s, ev) =>
+                    {
+                        Dispatcher.Invoke((Action)delegate() { refreshSubscriptionList(); });
+                    };
+
+                    // Start loading in a new thread
+                    Thread workerThread = new Thread(insertedSubscription.LoadFeed);
+                    workerThread.Start();
+                }
+            }
+            else
+            {
+                MessageBox.Show("You need at least one category to add a subscription.");
+            }
         }
     }
 }

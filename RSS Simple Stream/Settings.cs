@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RSS_Simple_Stream
 {
-    class Settings
+    public class Settings
     {
         // SQLite database file
         public const string SQLITE_DATABASE = "database.sqlite";

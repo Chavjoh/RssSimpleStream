@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RSS_Simple_Stream
 {
-    class Tools
+    public class Tools
     {
         public static string ComputeHash(string input, HashAlgorithm algorithm)
         {

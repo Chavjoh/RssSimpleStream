@@ -4,7 +4,8 @@
         Title="AboutWindow" 
         Height="300" 
         Width="300" 
-        ResizeMode="NoResize">
+        ResizeMode="NoResize" 
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

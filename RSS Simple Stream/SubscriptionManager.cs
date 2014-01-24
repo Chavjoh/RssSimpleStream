@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RSS_Simple_Stream
 {
-    class SubscriptionManager
+    public class SubscriptionManager
     {
         private Category parentCategory;
         private List<Subscription> subscriptionList;
@@ -25,6 +25,11 @@ namespace RSS_Simple_Stream
 
         #region Properties
 
+        public Category Parent
+        {
+            get { return this.parentCategory; }
+        }
+
         public List<Subscription> SubscriptionList
         {
             get { return this.subscriptionList; }
@@ -32,26 +37,16 @@ namespace RSS_Simple_Stream
 
         #endregion
 
-        private void Load()
+        public Subscription AddToList(int id, string url)
         {
-            // TODO
-
-            // TEMP
-            //this.subscriptionList.Add(new Subscription("http://www.pcinpact.com/rss/news.xml"));
-        }
-
-
-        public Subscription Add(string url)
-        {
-            // TODO: Check URL
-            Subscription subscription = new Subscription(this.parentCategory, url);
+            Subscription subscription = new Subscription(id, this, url);
 
             this.subscriptionList.Add(subscription);
 
             return subscription;
         }
 
-        public void Remove(string url)
+        public void RemoveFromList(string url)
         {
             // Search subscription by URL
             Subscription subscription = this.subscriptionList.Find(x => x.Url.Equals(url));
@@ -60,5 +55,47 @@ namespace RSS_Simple_Stream
             subscriptionList.Remove(subscription);
         }
 
+        public Subscription Insert(string url)
+        {
+            // Database connexion
+            SQLiteDatabase db = SQLiteDatabase.getInstance(Settings.SQLITE_DATABASE);
+
+            // Dictionary with column->value
+            Dictionary<String, String> data = new Dictionary<String, String>();
+            data.Add("id_category", this.parentCategory.Id.ToString());
+            data.Add("url_subscription", url);
+
+            try
+            {
+                // Insert into database, get of the row
+                int id = db.Insert("subscription", data);
+
+                // Insert element into current list
+                return this.AddToList(id, url);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return null;
+        }
+
+        public void Remove(Subscription subscription)
+        {
+            // Database connexion
+            SQLiteDatabase db = SQLiteDatabase.getInstance(Settings.SQLITE_DATABASE);
+
+            try
+            {
+                db.Delete("subscription", String.Format("id_subscription = {0}", subscription.Id));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            this.subscriptionList.Remove(subscription);
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RSS_Simple_Stream
 {
-    class Item
+    public class Item
     {
         private string title;
         private string description;
@@ -38,6 +38,12 @@ namespace RSS_Simple_Stream
         {
             get { return this.date; }
             set { this.date = value; }
+        }
+
+        public string Guid
+        {
+            get { return this.guid; }
+            set { this.guid = value; }
         }
 
         #endregion

@@ -23,5 +23,10 @@ namespace RSS_Simple_Stream
         {
             InitializeComponent();
         }
+
+        private void buttonOk_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace RSS_Simple_Stream
 {
-    class ItemManager
+    public class ItemManager
     {
         private List<Item> itemList;
-        private Category parentCategory;
+        private Subscription parentSubscription;
 
         #region Constructors
 
-        public ItemManager(Category parentCategory)
+        public ItemManager(Subscription parentSubscription)
         {
-            this.parentCategory = parentCategory;
+            this.parentSubscription = parentSubscription;
             this.itemList = new List<Item>();
         }
 

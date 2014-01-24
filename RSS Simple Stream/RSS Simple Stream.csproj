@@ -48,6 +48,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>RssSimpleStream.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -78,6 +81,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Category.cs" />
     <Compile Include="CategoryDataWindow.xaml.cs">
       <DependentUpon>CategoryDataWindow.xaml</DependentUpon>
@@ -87,13 +93,19 @@
       <DependentUpon>CategoryWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ItemManager.cs" />
-    <Compile Include="Loader.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SQLiteDatabase.cs" />
     <Compile Include="Subscription.cs" />
+    <Compile Include="SubscriptionDataWindow.xaml.cs">
+      <DependentUpon>SubscriptionDataWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SubscriptionManager.cs" />
     <Compile Include="Tools.cs" />
+    <Page Include="AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CategoryDataWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -114,6 +126,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SubscriptionDataWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -211,6 +227,16 @@
   </ItemGroup>
   <ItemGroup>
     <SplashScreen Include="Images\SplashScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\help_16x16.png" />
+    <Resource Include="Images\help_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\hearc.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="RssSimpleStream.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

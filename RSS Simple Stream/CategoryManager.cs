@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace RSS_Simple_Stream
 {
-    class CategoryManager
+    public class CategoryManager
     {
         private List<Category> categoryList;
         private static CategoryManager instance = null;
@@ -86,7 +86,6 @@ namespace RSS_Simple_Stream
                 SELECT 
                     s.id_subscription,
                     s.id_category,
-                    s.title_subscription,
                     s.url_subscription
                 FROM 
                     subscription AS s";
@@ -100,7 +99,10 @@ namespace RSS_Simple_Stream
                 // Add current subscription to the category
                 int id_category = int.Parse(r["id_category"].ToString());
                 Category category = this.categoryList.Find(x => x.Id == id_category);
-                category.SubscriptionManager.Add((string)r["url_subscription"]);
+                category.SubscriptionManager.AddToList(
+                    int.Parse(r["id_subscription"].ToString()), 
+                    (string)r["url_subscription"]
+                );
             }
         }
 

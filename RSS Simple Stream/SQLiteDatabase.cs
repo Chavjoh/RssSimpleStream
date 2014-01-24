@@ -11,7 +11,7 @@ namespace RSS_Simple_Stream
     /// Modified from brennydoogles tutorial
     /// http://www.dreamincode.net/forums/topic/157830-using-sqlite-with-c%23/
     /// </summary>
-    class SQLiteDatabase
+    public class SQLiteDatabase
     {
         private String file;
         private String dbConnection;

@@ -9,7 +9,9 @@
     MinHeight="300"
     MinWidth="600"
     ResizeMode="CanResizeWithGrip"
-    FlowDirection="LeftToRight" Closing="RibbonWindow_Closing">
+    FlowDirection="LeftToRight" 
+    Closing="RibbonWindow_Closing" 
+    WindowStartupLocation="CenterScreen">
     <!-- 
         COMMAND BINDING
     
@@ -70,10 +72,12 @@
                     <Fluent:Button Name="subscriptionExport" Header="Export subscription list" Icon="Images\Gray.png" LargeIcon="Images\GrayLarge.png" />
                 </Fluent:RibbonGroupBox>-->
                 <Fluent:RibbonGroupBox Header="">
-                    <Fluent:Button Click="tabClose_Click" Name="tabClose" Header="Close current tab" Icon="Images\tab_delete_16x16.png" LargeIcon="Images\tab_delete_32x32.png" Visibility="Collapsed" />
+                    <Fluent:Button Name="subscriptionAdd" Click="subscriptionAdd_Click" Header="Add a subscription" Icon="Images\feed_add_16x16.png" LargeIcon="Images\feed_add_32x32.png" />
+                    <Fluent:Button Name="tabClose" Click="tabClose_Click" Header="Close current tab" Icon="Images\tab_delete_16x16.png" LargeIcon="Images\tab_delete_32x32.png" Visibility="Collapsed" />
                 </Fluent:RibbonGroupBox>
-                <Fluent:RibbonGroupBox Header="">
-                    <Fluent:Button Name="AppQuit" Header="Quit application" Icon="Images\quit_16x16.png" LargeIcon="Images\quit_32x32.png" />
+                <Fluent:RibbonGroupBox Header="Application">
+                    <Fluent:Button Name="AppAbout" Header="About" Icon="Images\help_16x16.png" LargeIcon="Images\help_32x32.png" Click="AppAbout_Click" />
+                    <Fluent:Button Name="AppQuit" Header="Quit" Icon="Images\quit_16x16.png" LargeIcon="Images\quit_32x32.png" Click="AppQuit_Click" />
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Name="RibbonTab_Category" Header="Manage" Group="{Binding ElementName=tabCategory, Mode=OneWay}">
@@ -82,12 +86,9 @@
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Name="RibbonTab_Subscription" Header="Manage" Group="{Binding ElementName=tabSubscription, Mode=OneWay}">
-                <Fluent:RibbonGroupBox Header="Feed">
-                    <Fluent:Button Click="subscriptionRefresh_Click" Name="subscriptionRefresh" Header="Refresh current subscription" Icon="Images\refresh_16x16.png" LargeIcon="Images\refresh_32x32.png" />
-                </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Subscription">
-                    <Fluent:Button Name="subscriptionAdd" Header="Add a subscription" Icon="Images\feed_add_16x16.png" LargeIcon="Images\feed_add_32x32.png" />
-                    <Fluent:Button Name="subscriptionDelete" Header="Delete current subscription" Icon="Images\feed_delete_16x16.png" LargeIcon="Images\feed_delete_32x32.png" />
+                    <Fluent:Button Click="subscriptionRefresh_Click" Name="subscriptionRefresh" Header="Refresh current" Icon="Images\refresh_16x16.png" LargeIcon="Images\refresh_32x32.png" />
+                    <Fluent:Button Name="subscriptionDelete" Header="Delete current" Icon="Images\feed_delete_16x16.png" LargeIcon="Images\feed_delete_32x32.png" Click="subscriptionDelete_Click" />
                     
                     <!--<Fluent:TextBox x:Name="textBox"
                                     InputWidth="70"
