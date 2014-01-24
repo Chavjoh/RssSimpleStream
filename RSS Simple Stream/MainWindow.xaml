@@ -43,10 +43,12 @@
         <Fluent:Ribbon Name="mainRibbon">
             <Fluent:Ribbon.ContextualGroups>
 
+                <!--
                 <Fluent:RibbonContextualTabGroup x:Name="tabCategory"
                                                  Background="Purple"
                                                  Header="Category"
                                                  Visibility="Visible" />
+                -->
                 
                 <Fluent:RibbonContextualTabGroup x:Name="tabSubscription"
                                                  Background="#FF2B579A"
@@ -72,23 +74,21 @@
                     <Fluent:Button Name="subscriptionExport" Header="Export subscription list" Icon="Images\Gray.png" LargeIcon="Images\GrayLarge.png" />
                 </Fluent:RibbonGroupBox>-->
                 <Fluent:RibbonGroupBox Header="">
-                    <Fluent:Button Name="subscriptionAdd" Click="subscriptionAdd_Click" Header="Add a subscription" Icon="Images\feed_add_16x16.png" LargeIcon="Images\feed_add_32x32.png" />
-                    <Fluent:Button Name="tabClose" Click="tabClose_Click" Header="Close current tab" Icon="Images\tab_delete_16x16.png" LargeIcon="Images\tab_delete_32x32.png" Visibility="Collapsed" />
+                    <Fluent:Button Name="categoryManage" Click="categoryManage_Click" Margin="5 0" Header="Manage all categories" Icon="Images\folder_feed_16x16.png" LargeIcon="Images\folder_feed_32x32.png" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="">
+                    <Fluent:Button Name="subscriptionAdd" Click="subscriptionAdd_Click" Margin="5 0" Header="Add a new subscription" Icon="Images\feed_add_16x16.png" LargeIcon="Images\feed_add_32x32.png" />
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Application">
-                    <Fluent:Button Name="AppAbout" Header="About" Icon="Images\help_16x16.png" LargeIcon="Images\help_32x32.png" Click="AppAbout_Click" />
-                    <Fluent:Button Name="AppQuit" Header="Quit" Icon="Images\quit_16x16.png" LargeIcon="Images\quit_32x32.png" Click="AppQuit_Click" />
-                </Fluent:RibbonGroupBox>
-            </Fluent:RibbonTabItem>
-            <Fluent:RibbonTabItem Name="RibbonTab_Category" Header="Manage" Group="{Binding ElementName=tabCategory, Mode=OneWay}">
-                <Fluent:RibbonGroupBox Header="Category">
-                    <Fluent:Button Name="categoryManage" Header="Manage" Icon="Images\folder_feed_16x16.png" LargeIcon="Images\folder_feed_32x32.png" Click="categoryManage_Click" />
+                    <Fluent:Button Name="tabClose" Click="tabClose_Click" Margin="5 0" Header="Close current tab" Icon="Images\tab_delete_16x16.png" LargeIcon="Images\tab_delete_32x32.png" Visibility="Collapsed" />
+                    <Fluent:Button Name="AppAbout" Click="AppAbout_Click" Margin="5 0" Header="About" Icon="Images\help_16x16.png" LargeIcon="Images\help_32x32.png" />
+                    <Fluent:Button Name="AppQuit" Click="AppQuit_Click" Margin="5 0" Header="Quit" Icon="Images\quit_16x16.png" LargeIcon="Images\quit_32x32.png" />
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Name="RibbonTab_Subscription" Header="Manage" Group="{Binding ElementName=tabSubscription, Mode=OneWay}">
                 <Fluent:RibbonGroupBox Header="Subscription">
-                    <Fluent:Button Click="subscriptionRefresh_Click" Name="subscriptionRefresh" Header="Refresh current" Icon="Images\refresh_16x16.png" LargeIcon="Images\refresh_32x32.png" />
-                    <Fluent:Button Name="subscriptionDelete" Header="Delete current" Icon="Images\feed_delete_16x16.png" LargeIcon="Images\feed_delete_32x32.png" Click="subscriptionDelete_Click" />
+                    <Fluent:Button Name="subscriptionRefresh" Click="subscriptionRefresh_Click" Margin="5 0" Header="Refresh current" Icon="Images\refresh_16x16.png" LargeIcon="Images\refresh_32x32.png" />
+                    <Fluent:Button Name="subscriptionDelete" Click="subscriptionDelete_Click" Margin="5 0" Header="Delete current" Icon="Images\feed_delete_16x16.png" LargeIcon="Images\feed_delete_32x32.png" />
                     
                     <!--<Fluent:TextBox x:Name="textBox"
                                     InputWidth="70"
@@ -97,16 +97,16 @@
                                     Text="CurrentText" /> -->
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
-            <Fluent:RibbonTabItem Name="RibbonTab_ItemManage" Header="Manage" Group="{Binding ElementName=tabItem, Mode=OneWay}">
+            <!-- <Fluent:RibbonTabItem Name="RibbonTab_ItemManage" Header="Manage" Group="{Binding ElementName=tabItem, Mode=OneWay}">
                 <Fluent:RibbonGroupBox Header="Group">
 
                 </Fluent:RibbonGroupBox>
-            </Fluent:RibbonTabItem>
+            </Fluent:RibbonTabItem> -->
             <Fluent:RibbonTabItem Name="RibbonTab_ItemShare" Header="Share" Group="{Binding ElementName=tabItem, Mode=OneWay}">
                 <Fluent:RibbonGroupBox Header="Share">
-                    <Fluent:Button Click="itemShare_Facebook_Click" Name="itemShare_Facebook" Header="Share on Facebook" Icon="Images\facebook_16x16.png" LargeIcon="Images\facebook_32x32.png" />
-                    <Fluent:Button Click="itemShare_Twitter_Click" Name="itemShare_Twitter" Header="Share on Twitter" Icon="Images\twitter_16x16.png" LargeIcon="Images\twitter_32x32.png" />
-                    <Fluent:Button Click="itemShare_Google_Click" Name="itemShare_Google" Header="Share on Google+" Icon="Images\google_plus_16x16.png" LargeIcon="Images\google_plus_32x32.png" />
+                    <Fluent:Button Name="itemShare_Facebook" Click="itemShare_Facebook_Click" Margin="5 0" Header="Share on Facebook" Icon="Images\facebook_16x16.png" LargeIcon="Images\facebook_32x32.png" />
+                    <Fluent:Button Name="itemShare_Twitter" Click="itemShare_Twitter_Click" Margin="5 0" Header="Share on Twitter" Icon="Images\twitter_16x16.png" LargeIcon="Images\twitter_32x32.png" />
+                    <Fluent:Button Name="itemShare_Google" Click="itemShare_Google_Click" Margin="5 0" Header="Share on Google+" Icon="Images\google_plus_16x16.png" LargeIcon="Images\google_plus_32x32.png" />
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>

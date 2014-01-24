@@ -5,7 +5,8 @@
         Height="100" 
         Width="300" 
         Padding="5"
-        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        ResizeMode="NoResize" 
+        WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.RowDefinitions>

@@ -85,7 +85,7 @@ namespace RSS_Simple_Stream
             view.GroupDescriptions.Add(groupDescription);
 
             // Hide specific ribbon tab
-            this.RibbonTab_ItemManage.Visibility = Visibility.Collapsed;
+            //this.RibbonTab_ItemManage.Visibility = Visibility.Collapsed;
             this.RibbonTab_ItemShare.Visibility = Visibility.Collapsed;
             this.RibbonTab_Subscription.Visibility = Visibility.Collapsed;
         }
@@ -176,7 +176,7 @@ namespace RSS_Simple_Stream
 
             // Hide tab about items
             this.RibbonTab_ItemShare.Visibility = Visibility.Collapsed;
-            this.RibbonTab_ItemManage.Visibility = Visibility.Collapsed;
+            //this.RibbonTab_ItemManage.Visibility = Visibility.Collapsed;
         }
 
         private void itemList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -284,7 +284,7 @@ namespace RSS_Simple_Stream
             if (this.itemList.SelectedItem == null)
             {
                 // Hide tab about items
-                this.RibbonTab_ItemManage.Visibility = Visibility.Hidden;
+                //this.RibbonTab_ItemManage.Visibility = Visibility.Hidden;
                 this.RibbonTab_ItemShare.Visibility = Visibility.Hidden;
             }
             else
