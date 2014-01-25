@@ -240,11 +240,18 @@ namespace RSS_Simple_Stream
             // Get the current subscription selected
             Subscription subscription = (Subscription)this.subscriptionList.SelectedItem;
 
-            // Delete subscription
-            subscription.Manager.Remove(subscription);
+            // Confirmation message
+            MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure to want to delete the subscription " + subscription.Title + " ?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            // Refresh subscription list
-            this.refreshSubscriptionList();
+            // If user confirm to delete subscription
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                // Delete subscription
+                subscription.Manager.Remove(subscription);
+
+                // Refresh subscription list
+                this.refreshSubscriptionList();
+            }
         }
 
         #endregion

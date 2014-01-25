@@ -32,7 +32,22 @@ namespace RSS_Simple_Stream
 
         private void buttonOk_Click(object sender, RoutedEventArgs e)
         {
+            string name = this.NameCategory;
+
+            if (this.NameCategory.Equals(""))
+            {
+                MessageBox.Show("Please enter a name for the category", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (CategoryManager.getInstance().Search(this.NameCategory) != null)
+            {
+                MessageBox.Show("The name you entered is already used.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             DialogResult = true;
+            Close();
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)

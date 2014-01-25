@@ -39,6 +39,18 @@ namespace RSS_Simple_Stream
 
         #endregion
 
+        public Category Search(string name)
+        {
+            // Search category by name
+            return this.categoryList.Find(x => x.Name.ToLower().Equals(name.ToLower()));
+        }
+
+        public Category Search(int id)
+        {
+            // Search category by ID
+            return this.categoryList.Find(x => x.Id == id);
+        }
+
         public List<Subscription> GetAllSubscription()
         {
             List<Subscription> allSubscription = new List<Subscription>();
@@ -63,7 +75,7 @@ namespace RSS_Simple_Stream
         public void RemoveFromList(string name)
         {
             // Search category by name
-            Category category = this.categoryList.Find(x => x.Name.Equals(name));
+            Category category = this.Search(name);
 
             // Remove subscription from list
             this.categoryList.Remove(category);
@@ -97,7 +109,7 @@ namespace RSS_Simple_Stream
             {
                 // Add current subscription to the category
                 int id_category = int.Parse(r["id_category"].ToString());
-                Category category = this.categoryList.Find(x => x.Id == id_category);
+                Category category = this.Search(id_category);
                 category.SubscriptionManager.AddToList(
                     int.Parse(r["id_subscription"].ToString()), 
                     (string)r["url_subscription"]
