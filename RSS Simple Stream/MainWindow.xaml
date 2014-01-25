@@ -12,18 +12,6 @@
     FlowDirection="LeftToRight" 
     Closing="RibbonWindow_Closing" 
     WindowStartupLocation="CenterScreen">
-    <!-- 
-        COMMAND BINDING
-    
-    <Fluent:RibbonWindow.CommandBindings>
-        <CommandBinding Command="RSS_Simple_Stream:MainWindow.refreshSubscriptionFeed"
-                        Executed="New_Executed"
-                        CanExecute="New_CanExecute" />
-    </Fluent:RibbonWindow.CommandBindings> 
-    -->
-    <!-- <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.New" Executed="NewCommand_Executed" CanExecute="NewCommand_CanExecute" />
-    </Window.CommandBindings> -->
 
     <Grid Name="contentGrid">
         <!-- 
@@ -94,8 +82,7 @@
         -->
         <TabControl Name="contentTabControl" Grid.Row="1" Margin="5" SelectionChanged="contentTabControl_SelectionChanged">
             <TabControl.Resources>
-                <Style x:Key="ThemeButtonStyle"
-                       TargetType="Button">
+                <Style x:Key="ThemeButtonStyle" TargetType="Button">
                     <Setter Property="Margin"
                             Value="10" />
                     <Setter Property="Width"

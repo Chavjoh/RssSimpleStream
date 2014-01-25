@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 namespace RSS_Simple_Stream
 {
     /// <summary>
-    /// Logique d'interaction pour AboutWindow.xaml
+    /// Interaction logic for AboutWindow.xaml
     /// </summary>
     public partial class AboutWindow : Window
     {

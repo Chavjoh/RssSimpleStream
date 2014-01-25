@@ -26,6 +26,7 @@ namespace RSS_Simple_Stream
     /// </summary>
     public partial class MainWindow : RibbonWindow
     {
+        // Keep current RSS item in memory for current tab
         private Item currentItem;
 
         public MainWindow()
@@ -100,11 +101,20 @@ namespace RSS_Simple_Stream
             view.GroupDescriptions.Add(groupDescription);
         }
 
+        /// <summary>
+        /// Change current tab to another
+        /// </summary>
+        /// <param name="tabItem">Tab to show</param>
         private void ChangeCurrentTab(TabItem tabItem)
         {
             this.ChangeCurrentTab(this.contentTabControl.Items.IndexOf(tabItem), tabItem);
         }
 
+        /// <summary>
+        /// Change current tab to another
+        /// </summary>
+        /// <param name="index">Tab index to show</param>
+        /// <param name="tabItem">Tab object to show</param>
         private void ChangeCurrentTab(int index, TabItem tabItem)
         {
             // Change selection
@@ -117,6 +127,10 @@ namespace RSS_Simple_Stream
             //tabItem.IsSelected = true;
         }
 
+        /// <summary>
+        /// Return current RSS item for current tab or selection
+        /// </summary>
+        /// <returns>Current RSS item</returns>
         private Item GetCurrentRssItem()
         {
             // When we're on other tab
@@ -138,6 +152,11 @@ namespace RSS_Simple_Stream
             return null;
         }
 
+        /// <summary>
+        /// Add a new tab with a browser inside
+        /// </summary>
+        /// <param name="rssItem">RSS item associated, load his URL</param>
+        /// <returns>TabItem created</returns>
         private TabItem AddBrowserTab(Item rssItem)
         {
             TabItem browserTab = this.AddBrowserTab(rssItem.Title, rssItem.Link);
@@ -150,6 +169,7 @@ namespace RSS_Simple_Stream
         /// </summary>
         /// <param name="title">Title of the new tab</param>
         /// <param name="url">URL to load in the browser</param>
+        /// <returns>TabItem created</returns>
         private TabItem AddBrowserTab(string title, string url)
         {
             // Create context menu
@@ -194,7 +214,7 @@ namespace RSS_Simple_Stream
         /// <summary>
         /// Close a tab
         /// </summary>
-        /// <param name="item">Item to delete</param>
+        /// <param name="item">Tab to close</param>
         private void CloseTab(TabItem item)
         {
             if (item != null)
@@ -212,9 +232,11 @@ namespace RSS_Simple_Stream
 
         private void categoryManage_Click(object sender, RoutedEventArgs e)
         {
+            // Show category management window
             CategoryWindow categoryWindow = new CategoryWindow();
             categoryWindow.ShowDialog();
 
+            // Refresh list after closing management window
             refreshSubscriptionList();
         }
 
@@ -259,9 +281,7 @@ namespace RSS_Simple_Stream
 
         private void AppQuit_Click(object sender, RoutedEventArgs e)
         {
-            //this.Close();
-            //TODO: TEMP
-            MessageBox.Show(this.contentTabControl.SelectedIndex + this.contentTabControl.SelectedItem.ToString());
+            this.Close();
         }
 
         #endregion 
@@ -303,11 +323,11 @@ namespace RSS_Simple_Stream
                 // Refresh subscription list
                 this.refreshSubscriptionList();
 
-                // Clear items list
+                // Clear item list
                 this.itemList.ItemsSource = null;
                 this.itemList.Items.Refresh();
 
-                // Hide tab
+                // Hide subscription tab
                 this.RibbonTab_Subscription.Visibility = Visibility.Collapsed;
             }
         }

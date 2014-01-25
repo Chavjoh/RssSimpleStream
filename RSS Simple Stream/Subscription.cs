@@ -79,6 +79,9 @@ namespace RSS_Simple_Stream
 
         #endregion
 
+        /// <summary>
+        /// Load feed of the subscription
+        /// </summary>
         public void LoadFeed()
         {
             if (String.IsNullOrEmpty(this.url))
@@ -93,12 +96,15 @@ namespace RSS_Simple_Stream
                     XmlDocument xmlDocument = new XmlDocument();
                     xmlDocument.Load(reader);
 
+                    // Get title and description of the subscription
                     this.title = ParseElements(xmlDocument.SelectSingleNode("//channel"), "title");
                     this.description = ParseElements(xmlDocument.SelectSingleNode("//channel"), "description");
 
+                    // Clear space, tabulation, new line, etc.
                     this.title = Regex.Replace(this.title.Trim(), @"\t|\n|\r", "");
                     this.description = Regex.Replace(this.description.Trim(), @"\t|\n|\r", "");
 
+                    // Parse items
                     ParseItems(xmlDocument);
                 }
 
@@ -111,10 +117,15 @@ namespace RSS_Simple_Stream
                 String error = "The following error has occurred during loading of subscription " + this.url + ":\n\n" + e.Message.ToString() + "\n\n";
                 MessageBox.Show(error);
 
+                // Show the url as title
                 this.title = this.url;
             }
         }
 
+        /// <summary>
+        /// Parse an item
+        /// </summary>
+        /// <param name="xmlDocument">XML document that contains items</param>
         private void ParseItems(XmlDocument xmlDocument)
         {
             this.itemManager.ItemList.Clear();
@@ -123,29 +134,42 @@ namespace RSS_Simple_Stream
 
             foreach (XmlNode node in nodes)
             {
+                // Create a new item
                 Item item = new Item();
+
+                // Get attributes
                 item.Title = ParseElements(node, "title");
                 item.Description = ParseElements(node, "description");
                 item.Link = ParseElements(node, "link");
 
+                // Clear space, tabulation, new line, etc.
                 item.Title = Regex.Replace(item.Title.Trim(), @"\t|\n|\r", "");
                 item.Description = Regex.Replace(item.Description.Trim(), @"\t|\n|\r", "");
                 item.Link = Regex.Replace(item.Link.Trim(), @"\t|\n|\r", "");
 
+                // Parse publication date
                 DateTime date;
                 DateTime.TryParse(ParseElements(node, "pubDate"), out date);
                 item.Date = date;
 
+                // Get or create GUID
                 string guid = ParseElements(node, "guid");
                 if (guid.Equals(UNDEFINED))
                 {
                     guid = Tools.ComputeHash(item.ToString(), new SHA256CryptoServiceProvider());
                 }
 
+                // Add item to list
                 this.itemManager.ItemList.Add(item);
             }
         }
 
+        /// <summary>
+        /// Parse an element
+        /// </summary>
+        /// <param name="parent">Parent element</param>
+        /// <param name="path">Path of the element in XML document</param>
+        /// <returns>Value of the element</returns>
         private string ParseElements(XmlNode parent, string path)
         {
             XmlNode node = parent.SelectSingleNode(path);
@@ -160,6 +184,10 @@ namespace RSS_Simple_Stream
             }
         }
 
+        /// <summary>
+        /// Get a string representation of the item
+        /// </summary>
+        /// <returns>Item as string</returns>
         public override string ToString()
         {
             string toString = base.ToString();

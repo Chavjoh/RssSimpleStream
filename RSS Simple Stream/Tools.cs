@@ -9,6 +9,12 @@ namespace RSS_Simple_Stream
 {
     public class Tools
     {
+        /// <summary>
+        /// Hash input with the given algorithm
+        /// </summary>
+        /// <param name="input">String to hash</param>
+        /// <param name="algorithm">Algorithm to use</param>
+        /// <returns>Hash</returns>
         public static string ComputeHash(string input, HashAlgorithm algorithm)
         {
             // Convert string to byte array

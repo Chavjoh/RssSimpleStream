@@ -8,11 +8,10 @@ namespace RSS_Simple_Stream
 {
     /// <summary>
     /// SQLite database management 
-    /// Modified from brennydoogles tutorial
+    /// Modified from brennydoogles tutorial (http://bit.ly/1ayCi6z)
     /// - Become a multiton class
-    /// - Add security to avoid SQL injection
+    /// - Add security to avoid SQL injection !!!
     /// - Get the last ID inserted
-    /// http://www.dreamincode.net/forums/topic/157830-using-sqlite-with-c%23/
     /// </summary>
     public class SQLiteDatabase
     {

@@ -20,6 +20,7 @@ namespace RSS_Simple_Stream
     /// </summary>
     public partial class SubscriptionDataWindow : Window
     {
+        // Save the subscription inserted to get it
         private Subscription insertedSubscription;
 
         public SubscriptionDataWindow()
@@ -29,7 +30,6 @@ namespace RSS_Simple_Stream
             // Load the list of categories
             CategoryManager categoryManager = CategoryManager.getInstance();
             this.categoryList.ItemsSource = categoryManager.CategoryList;
-            this.categoryList.SelectedIndex = 1;
         }
 
         /// <summary>

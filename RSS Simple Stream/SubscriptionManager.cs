@@ -38,16 +38,32 @@ namespace RSS_Simple_Stream
 
         #endregion
 
+        /// <summary>
+        /// Search a subscription by ID
+        /// </summary>
+        /// <param name="id">ID of the subscription</param>
+        /// <returns>Subscription found</returns>
         public Subscription Search(int id)
         {
             return this.subscriptionList.Find(x => x.Id == id);
         }
 
+        /// <summary>
+        /// Search a subscription by URL
+        /// </summary>
+        /// <param name="url">URL of the subscription</param>
+        /// <returns>Subscription found</returns>
         public Subscription Search(string url)
         {
             return this.subscriptionList.Find(x => x.Url.ToLower().Equals(url.ToLower()));
         }
 
+        /// <summary>
+        /// Add a subscription to the current category
+        /// </summary>
+        /// <param name="id">ID of the subscription</param>
+        /// <param name="url">URL of the subscription</param>
+        /// <returns>New subscription added</returns>
         public Subscription AddToList(int id, string url)
         {
             Subscription subscription = new Subscription(id, this, url);
@@ -57,6 +73,10 @@ namespace RSS_Simple_Stream
             return subscription;
         }
 
+        /// <summary>
+        /// Remove a subscription from the current category
+        /// </summary>
+        /// <param name="url">URL of the subscription</param>
         public void RemoveFromList(string url)
         {
             // Search subscription by URL
@@ -66,6 +86,11 @@ namespace RSS_Simple_Stream
             subscriptionList.Remove(subscription);
         }
 
+        /// <summary>
+        /// Insert a new subscription into the list and database
+        /// </summary>
+        /// <param name="url">URL of the subscription</param>
+        /// <returns>New subscription added</returns>
         public Subscription Insert(string url)
         {
             // Database connexion
@@ -92,6 +117,10 @@ namespace RSS_Simple_Stream
             return null;
         }
 
+        /// <summary>
+        /// Delete a subscription from the list and database
+        /// </summary>
+        /// <param name="subscription">Subscription object to delete</param>
         public void Remove(Subscription subscription)
         {
             // Database connexion
@@ -108,6 +137,7 @@ namespace RSS_Simple_Stream
                 Console.WriteLine(e.Message);
             }
 
+            // Remove from the list
             this.subscriptionList.Remove(subscription);
         }
     }

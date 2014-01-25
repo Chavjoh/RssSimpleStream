@@ -32,14 +32,14 @@ namespace RSS_Simple_Stream
 
         private void buttonOk_Click(object sender, RoutedEventArgs e)
         {
-            string name = this.NameCategory;
-
+            // Category name cannot be empty
             if (this.NameCategory.Equals(""))
             {
                 MessageBox.Show("Please enter a name for the category", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
+            // Category name must be unique
             if (CategoryManager.getInstance().SearchCategory(this.NameCategory) != null)
             {
                 MessageBox.Show("The name you entered is already used.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);

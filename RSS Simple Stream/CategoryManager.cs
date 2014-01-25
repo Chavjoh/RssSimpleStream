@@ -40,28 +40,50 @@ namespace RSS_Simple_Stream
 
         #endregion
 
+        /// <summary>
+        /// Search category by name
+        /// </summary>
+        /// <param name="name">Name of the category</param>
+        /// <returns>Category found</returns>
         public Category SearchCategory(string name)
         {
-            // Search category by name
             return this.categoryList.Find(x => x.Name.ToLower().Equals(name.ToLower()));
         }
 
+        /// <summary>
+        /// Search category by ID
+        /// </summary>
+        /// <param name="id">ID of the category</param>
+        /// <returns>Category found</returns>
         public Category SearchCategory(int id)
         {
-            // Search category by ID
             return this.categoryList.Find(x => x.Id == id);
         }
 
+        /// <summary>
+        /// Search subscription by ID
+        /// </summary>
+        /// <param name="id">ID of the subscription</param>
+        /// <returns>Subscription found</returns>
         public Subscription SearchSubscription(int id)
         {
             return this.GetAllSubscription().Find(x => x.Id == id);
         }
 
+        /// <summary>
+        /// Search subscription by URL
+        /// </summary>
+        /// <param name="url">URL of the subscription</param>
+        /// <returns>Subscription found</returns>
         public Subscription SearchSubscription(string url)
         {
             return this.GetAllSubscription().Find(x => x.Url.ToLower().Equals(url.ToLower()));
         }
 
+        /// <summary>
+        /// Create a subscription list of all categories
+        /// </summary>
+        /// <returns>Subscription list</returns>
         public List<Subscription> GetAllSubscription()
         {
             List<Subscription> allSubscription = new List<Subscription>();
@@ -74,6 +96,12 @@ namespace RSS_Simple_Stream
             return allSubscription;
         }
 
+        /// <summary>
+        /// Add a category to the list
+        /// </summary>
+        /// <param name="id">ID of the category</param>
+        /// <param name="name">Name of the category</param>
+        /// <returns>New category inserted</returns>
         public Category AddToList(int id, string name)
         {
             Category category = new Category(id, name);
@@ -83,6 +111,10 @@ namespace RSS_Simple_Stream
             return category;
         }
 
+        /// <summary>
+        /// Remove a category from the list
+        /// </summary>
+        /// <param name="name">Name of the category</param>
         public void RemoveFromList(string name)
         {
             // Search category by name
@@ -92,12 +124,18 @@ namespace RSS_Simple_Stream
             this.categoryList.Remove(category);
         }
 
+        /// <summary>
+        /// Load category and subscription list
+        /// </summary>
         public void LoadAll()
         {
             this.LoadCategory();
             this.LoadSubscription();
         }
 
+        /// <summary>
+        /// Load subscriptions (all subscription)
+        /// </summary>
         public void LoadSubscription()
         {
             // Database connexion
@@ -128,6 +166,9 @@ namespace RSS_Simple_Stream
             }
         }
 
+        /// <summary>
+        /// Load categories
+        /// </summary>
         public void LoadCategory()
         {
             // Database connexion
@@ -157,11 +198,12 @@ namespace RSS_Simple_Stream
             }
         }
 
+        /// <summary>
+        /// Insert a new category into the list and database
+        /// </summary>
+        /// <param name="name">Name of the category</param>
         public void Insert(string name)
         {
-            // TODO: Check name
-            // TODO: Check if exists already
-
             // Database connexion
             SQLiteDatabase db = SQLiteDatabase.getInstance(Settings.SQLITE_DATABASE);
 
@@ -183,6 +225,10 @@ namespace RSS_Simple_Stream
             }
         }
 
+        /// <summary>
+        /// Update a category from database
+        /// </summary>
+        /// <param name="category">Category object already edited</param>
         public void Update(Category category)
         {
             // Database connexion
@@ -204,6 +250,10 @@ namespace RSS_Simple_Stream
             }
         }
 
+        /// <summary>
+        /// Delete a category from the list and database
+        /// </summary>
+        /// <param name="category">Category object to delete</param>
         public void Delete(Category category)
         {
             // Database connexion
@@ -221,6 +271,7 @@ namespace RSS_Simple_Stream
                 MessageBox.Show(e.Message);
             }
 
+            // Remove from the list
             this.categoryList.Remove(category);
         }
     }

@@ -25,10 +25,13 @@ namespace RSS_Simple_Stream
         {
             InitializeComponent();
 
+            // Get CategoryManager
             categoryManager = CategoryManager.getInstance();
 
+            // Bind Window list to Category list
             this.categoryList.ItemsSource = categoryManager.CategoryList;
 
+            // Disable while no category is selected
             this.buttonEdit.IsEnabled = false;
             this.buttonDelete.IsEnabled = false;
         }
