@@ -26,6 +26,8 @@ namespace RSS_Simple_Stream
     /// </summary>
     public partial class MainWindow : RibbonWindow
     {
+        private Item currentItem;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -98,12 +100,57 @@ namespace RSS_Simple_Stream
             view.GroupDescriptions.Add(groupDescription);
         }
 
+        private void ChangeCurrentTab(TabItem tabItem)
+        {
+            this.ChangeCurrentTab(this.contentTabControl.Items.IndexOf(tabItem), tabItem);
+        }
+
+        private void ChangeCurrentTab(int index, TabItem tabItem)
+        {
+            // Change selection
+            this.contentTabControl.SelectedIndex = index;
+
+            // Change item
+            //this.contentTabControl.SelectedItem = tabItem;
+
+            // Item state changed
+            //tabItem.IsSelected = true;
+        }
+
+        private Item GetCurrentRssItem()
+        {
+            // When we're on other tab
+            if (this.contentTabControl.SelectedIndex > 0)
+            {
+                return this.currentItem;
+            }
+            // When we're on Feed tab
+            else
+            {
+                // Check if an item is selected
+                if (this.itemList.SelectedItem != null)
+                {
+                    // Get the current item selected
+                    return (Item)this.itemList.SelectedItem;
+                }
+            }
+
+            return null;
+        }
+
+        private TabItem AddBrowserTab(Item rssItem)
+        {
+            TabItem browserTab = this.AddBrowserTab(rssItem.Title, rssItem.Link);
+            browserTab.Tag = rssItem;
+            return browserTab;
+        }
+
         /// <summary>
         /// Add a new tab with a browser inside
         /// </summary>
         /// <param name="title">Title of the new tab</param>
         /// <param name="url">URL to load in the browser</param>
-        private void AddBrowerTab(string title, string url)
+        private TabItem AddBrowserTab(string title, string url)
         {
             // Create context menu
             System.Windows.Controls.ContextMenu contextMenu;
@@ -140,6 +187,8 @@ namespace RSS_Simple_Stream
 
             // Add the new tab created
             this.contentTabControl.Items.Add(tabItem);
+
+            return tabItem;
         }
 
         /// <summary>
@@ -210,7 +259,9 @@ namespace RSS_Simple_Stream
 
         private void AppQuit_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            //this.Close();
+            //TODO: TEMP
+            MessageBox.Show(this.contentTabControl.SelectedIndex + this.contentTabControl.SelectedItem.ToString());
         }
 
         #endregion 
@@ -251,6 +302,13 @@ namespace RSS_Simple_Stream
 
                 // Refresh subscription list
                 this.refreshSubscriptionList();
+
+                // Clear items list
+                this.itemList.ItemsSource = null;
+                this.itemList.Items.Refresh();
+
+                // Hide tab
+                this.RibbonTab_Subscription.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -260,12 +318,7 @@ namespace RSS_Simple_Stream
 
         private void itemShare_Facebook_Click(object sender, RoutedEventArgs e)
         {
-            // Check if an item is selected
-            if (this.itemList.SelectedItem == null)
-                return;
-
-            // Get the current item selected
-            Item rssItem = (Item)this.itemList.SelectedItem;
+            Item rssItem = this.GetCurrentRssItem();
 
             // Create specific link to share on Facebook
             string url = "http://www.facebook.com/sharer/sharer.php?s=100&p[url]=" +
@@ -275,39 +328,38 @@ namespace RSS_Simple_Stream
                 "&p[summary]=";
 
             // Create a browser tab with the share link
-            AddBrowerTab("Share", url);
+            TabItem browserTab = AddBrowserTab("Share", url);
+
+            // Select new tab
+            ChangeCurrentTab(browserTab);
         }
 
         private void itemShare_Twitter_Click(object sender, RoutedEventArgs e)
         {
-            // Check if an item is selected
-            if (this.itemList.SelectedItem == null)
-                return;
-
-            // Get the current item selected
-            Item rssItem = (Item)this.itemList.SelectedItem;
+            Item rssItem = this.GetCurrentRssItem();
 
             // Create specific link to share on Twitter
             string url = "http://twitter.com/home?status=" + HttpUtility.UrlPathEncode(rssItem.Title + " : " + rssItem.Link);
 
             // Create a browser tab with the share link
-            AddBrowerTab("Share", url);
+            TabItem browserTab = AddBrowserTab("Share", url);
+
+            // Select new tab
+            ChangeCurrentTab(browserTab);
         }
 
         private void itemShare_Google_Click(object sender, RoutedEventArgs e)
         {
-            // Check if an item is selected
-            if (this.itemList.SelectedItem == null)
-                return;
-
-            // Get the current item selected
-            Item rssItem = (Item)this.itemList.SelectedItem;
+            Item rssItem = this.GetCurrentRssItem();
 
             // Create specific link to share on Google+
             string url = "https://plus.google.com/share?url=" + HttpUtility.UrlPathEncode(rssItem.Link);
 
             // Create a browser tab with the share link
-            AddBrowerTab("Share", url);
+            TabItem browserTab = AddBrowserTab("Share", url);
+
+            // Select new tab
+            ChangeCurrentTab(browserTab);
         }
 
         #endregion
@@ -343,7 +395,7 @@ namespace RSS_Simple_Stream
             Item rssItem = (Item)this.itemList.SelectedItem;
 
             // Create a browser tab with the item link
-            AddBrowerTab(rssItem.Title, rssItem.Link);
+            AddBrowserTab(rssItem);
         }
 
         private void itemList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -363,18 +415,56 @@ namespace RSS_Simple_Stream
 
         private void contentTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // When tab change to main tab "Feed"
-            if (this.contentTabControl.SelectedIndex == 0)
+            if (e.Source is TabControl)
             {
-                // Hide close button in Ribbon
-                this.tabClose.Visibility = Visibility.Collapsed;
+                // When tab change to main tab "Feed"
+                if (this.contentTabControl.SelectedIndex == 0)
+                {
+                    // Hide close button in Ribbon
+                    this.tabClose.Visibility = Visibility.Collapsed;
+
+                    // Show subscription ribbon tab
+                    this.RibbonTab_Subscription.Visibility = Visibility.Visible;
+
+                    // Show item ribbon tab only if item selected on feed tab
+                    if (this.itemList.SelectedItem != null)
+                    {
+                        this.RibbonTab_ItemShare.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        this.RibbonTab_ItemShare.Visibility = Visibility.Collapsed;
+                    }
+                }
+                // When another tab is selected
+                else
+                {
+                    // Get current tab selected 
+                    TabItem currentTab = (TabItem)this.contentTabControl.SelectedItem;
+
+                    // Show item ribbon tab only if it's not a share tab
+                    if (currentTab != null && currentTab.Tag != null)
+                    {
+                        // Save item associated
+                        this.currentItem = ((Item)currentTab.Tag);
+
+                        // Show share ribbon tab
+                        this.RibbonTab_ItemShare.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        this.RibbonTab_ItemShare.Visibility = Visibility.Collapsed;
+                    }
+
+                    // Hide subscription ribbon tab
+                    this.RibbonTab_Subscription.Visibility = Visibility.Collapsed;
+
+                    // Show close button in Ribbon
+                    this.tabClose.Visibility = Visibility.Visible;
+                }
             }
-            // When another tab is selected
-            else
-            {
-                // Show close button in Ribbon
-                this.tabClose.Visibility = Visibility.Visible;
-            }
+
+            e.Handled = true;
         }
 
         private void tabClose_Click(object sender, RoutedEventArgs e)

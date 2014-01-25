@@ -40,7 +40,7 @@ namespace RSS_Simple_Stream
                 return;
             }
 
-            if (CategoryManager.getInstance().Search(this.NameCategory) != null)
+            if (CategoryManager.getInstance().SearchCategory(this.NameCategory) != null)
             {
                 MessageBox.Show("The name you entered is already used.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;

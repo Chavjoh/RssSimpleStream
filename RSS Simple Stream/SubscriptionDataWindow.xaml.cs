@@ -78,7 +78,24 @@ namespace RSS_Simple_Stream
             }
 
             // Get category selected
-            Category categorySelected = (Category) this.categoryList.SelectedItem;
+            Category categorySelected = (Category)this.categoryList.SelectedItem;
+
+            // Get URL
+            string url = this.url.Text;
+
+            // Check if empty
+            if (this.url.Equals(""))
+            {
+                MessageBox.Show("Please enter an URL to add the subscription.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Check if already exists
+            if (CategoryManager.getInstance().SearchSubscription(url) != null)
+            {
+                MessageBox.Show("The given URL already exists for another subscription.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             // Variable to check given subscription URL
             Uri uriResult;

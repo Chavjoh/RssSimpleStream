@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -37,6 +38,16 @@ namespace RSS_Simple_Stream
 
         #endregion
 
+        public Subscription Search(int id)
+        {
+            return this.subscriptionList.Find(x => x.Id == id);
+        }
+
+        public Subscription Search(string url)
+        {
+            return this.subscriptionList.Find(x => x.Url.ToLower().Equals(url.ToLower()));
+        }
+
         public Subscription AddToList(int id, string url)
         {
             Subscription subscription = new Subscription(id, this, url);
@@ -49,7 +60,7 @@ namespace RSS_Simple_Stream
         public void RemoveFromList(string url)
         {
             // Search subscription by URL
-            Subscription subscription = this.subscriptionList.Find(x => x.Url.Equals(url));
+            Subscription subscription = this.Search(url);
 
             // Remove subscription from list
             subscriptionList.Remove(subscription);
@@ -88,7 +99,9 @@ namespace RSS_Simple_Stream
 
             try
             {
-                db.Delete("subscription", String.Format("id_subscription = {0}", subscription.Id));
+                List<SQLiteParameter> parameterList = new List<SQLiteParameter>();
+                parameterList.Add(new SQLiteParameter("@id_subscription", subscription.Id));
+                db.Delete("subscription", "id_subscription = @id_subscription", parameterList);
             }
             catch (Exception e)
             {

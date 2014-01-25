@@ -108,9 +108,10 @@ namespace RSS_Simple_Stream
             catch (Exception e)
             {
                 // When error occurred with database loading
-                String error = "The following error has occurred:\n\n";
-                error += e.Message.ToString() + "\n\n";
+                String error = "The following error has occurred during loading of subscription " + this.url + ":\n\n" + e.Message.ToString() + "\n\n";
                 MessageBox.Show(error);
+
+                this.title = this.url;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,16 +40,26 @@ namespace RSS_Simple_Stream
 
         #endregion
 
-        public Category Search(string name)
+        public Category SearchCategory(string name)
         {
             // Search category by name
             return this.categoryList.Find(x => x.Name.ToLower().Equals(name.ToLower()));
         }
 
-        public Category Search(int id)
+        public Category SearchCategory(int id)
         {
             // Search category by ID
             return this.categoryList.Find(x => x.Id == id);
+        }
+
+        public Subscription SearchSubscription(int id)
+        {
+            return this.GetAllSubscription().Find(x => x.Id == id);
+        }
+
+        public Subscription SearchSubscription(string url)
+        {
+            return this.GetAllSubscription().Find(x => x.Url.ToLower().Equals(url.ToLower()));
         }
 
         public List<Subscription> GetAllSubscription()
@@ -75,7 +86,7 @@ namespace RSS_Simple_Stream
         public void RemoveFromList(string name)
         {
             // Search category by name
-            Category category = this.Search(name);
+            Category category = this.SearchCategory(name);
 
             // Remove subscription from list
             this.categoryList.Remove(category);
@@ -102,14 +113,14 @@ namespace RSS_Simple_Stream
                     subscription AS s";
 
             // Get result of the query in DataTable
-            DataTable dataSubscription = db.GetDataTable(query);
+            DataTable dataSubscription = db.GetDataTable(query, null);
 
             // For each subscription
             foreach (DataRow r in dataSubscription.Rows)
             {
                 // Add current subscription to the category
                 int id_category = int.Parse(r["id_category"].ToString());
-                Category category = this.Search(id_category);
+                Category category = this.SearchCategory(id_category);
                 category.SubscriptionManager.AddToList(
                     int.Parse(r["id_subscription"].ToString()), 
                     (string)r["url_subscription"]
@@ -133,7 +144,7 @@ namespace RSS_Simple_Stream
                     c.name_category";
 
             // Get result of the query in DataTable
-            DataTable dataCategory = db.GetDataTable(query);
+            DataTable dataCategory = db.GetDataTable(query, null);
 
             // For each category
             foreach (DataRow r in dataCategory.Rows)
@@ -183,7 +194,9 @@ namespace RSS_Simple_Stream
 
             try
             {
-                db.Update("category", data, String.Format("category.id_category = {0}", category.Id));
+                List<SQLiteParameter> parameterList = new List<SQLiteParameter>();
+                parameterList.Add(new SQLiteParameter("@id_category", category.Id));
+                db.Update("category", data, "category.id_category = @id_category", parameterList);
             }
             catch (Exception e)
             {
@@ -198,7 +211,10 @@ namespace RSS_Simple_Stream
 
             try
             {
-                db.Delete("category", String.Format("id_category = {0}", category.Id));
+                List<SQLiteParameter> parameterList = new List<SQLiteParameter>();
+                parameterList.Add(new SQLiteParameter("@id_category", category.Id));
+                db.Delete("subscription", "id_category = @id_category", parameterList);
+                db.Delete("category", "id_category = @id_category", parameterList);
             }
             catch (Exception e)
             {
