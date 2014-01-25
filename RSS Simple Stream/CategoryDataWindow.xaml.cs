@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 namespace RSS_Simple_Stream
 {
     /// <summary>
-    /// Logique d'interaction pour CategoryDataWindow.xaml
+    /// Interaction logic for CategoryDataWindow.xaml
     /// </summary>
     public partial class CategoryDataWindow : Window
     {
@@ -33,6 +33,12 @@ namespace RSS_Simple_Stream
         private void buttonOk_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
+        }
+
+        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
         }
     }
 }

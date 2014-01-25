@@ -26,9 +26,9 @@
         <StackPanel Grid.Column="0" Grid.Row="1" Margin="10">
             <TextBlock TextWrapping="Wrap" Text="RSS Simple Stream" Margin="0 0 0 10" FontWeight="Bold" FontSize="20" />
             <TextBlock TextWrapping="Wrap" Height="Auto" Width="Auto" Margin="0 0 0 10">
-                This program allows you to manage your RSS feeds by sorting by category and providing the ability to share them on your favorite social networks. All of that in an ergonomic interface.
+                This program allows you to manage your RSS feeds by category and providing the ability to share them on your favorite social network. All of that in an ergonomic interface.
                 <LineBreak /> <LineBreak />
-                This small project has been made in the .NET course of the Haute Ecole Arc, Switzerland.
+                This small project has been made in the .NET course of the High School Arc, Switzerland.
             </TextBlock>
         </StackPanel>
     </Grid>

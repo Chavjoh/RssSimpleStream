@@ -17,6 +17,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Web;
 using System.Threading;
+using System.ComponentModel;
 
 namespace RSS_Simple_Stream
 {
@@ -76,26 +77,25 @@ namespace RSS_Simple_Stream
                 Console.WriteLine("The following error has occurred:\n\n" + e.Message.ToString() + "\n\n");
             }
 
-            // Bind subscription list with ListView
-            this.subscriptionList.ItemsSource = categoryManager.GetAllSubscription();
-
-            // Indicate which properties is the group
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(this.subscriptionList.ItemsSource);
-            PropertyGroupDescription groupDescription = new PropertyGroupDescription("Manager.Parent.Name");
-            view.GroupDescriptions.Add(groupDescription);
+            refreshSubscriptionList();
 
             // Hide specific ribbon tab
-            //this.RibbonTab_ItemManage.Visibility = Visibility.Collapsed;
             this.RibbonTab_ItemShare.Visibility = Visibility.Collapsed;
             this.RibbonTab_Subscription.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>
-        /// Refresh category list when changed is made
+        /// Refresh subscription list when changed is made
         /// </summary>
         public void refreshSubscriptionList()
         {
-            this.subscriptionList.Items.Refresh();
+            // Bind subscription list with ListView
+            this.subscriptionList.ItemsSource = CategoryManager.getInstance().GetAllSubscription();
+
+            // Indicate which properties is the group
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(this.subscriptionList.ItemsSource);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("Manager.Parent.Name");
+            view.GroupDescriptions.Add(groupDescription);
         }
 
         /// <summary>
@@ -159,38 +159,61 @@ namespace RSS_Simple_Stream
             }
         }
 
-        private void subscriptionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        #region RIBBON TAB - HOME
+
+        private void categoryManage_Click(object sender, RoutedEventArgs e)
         {
-            // Check if a subscription is selected
-            if (this.subscriptionList.SelectedItem != null)
+            CategoryWindow categoryWindow = new CategoryWindow();
+            categoryWindow.ShowDialog();
+
+            refreshSubscriptionList();
+        }
+
+        private void subscriptionAdd_Click(object sender, RoutedEventArgs e)
+        {
+            CategoryManager categoryManager = CategoryManager.getInstance();
+
+            // Check if at least one category exists
+            if (categoryManager.CategoryList.Count > 0)
             {
-                // Get selected subscription
-                Subscription currentSubscription = (Subscription)this.subscriptionList.SelectedItem;
+                // Open a new window to add a new subscription
+                SubscriptionDataWindow subscriptionWindow = new SubscriptionDataWindow();
+                subscriptionWindow.ShowDialog();
 
-                // Bind item list with ListView
-                this.itemList.ItemsSource = currentSubscription.ItemManager.ItemList;
+                // Get inserted subscription from the window
+                Subscription insertedSubscription = subscriptionWindow.InsertedSubscription;
 
-                // Show tab about subscription
-                this.RibbonTab_Subscription.Visibility = Visibility.Visible;
+                if (insertedSubscription != null)
+                {
+                    // Invoke refresh category list when load is finished
+                    insertedSubscription.ProgressUpdate += (s, ev) =>
+                    {
+                        Dispatcher.Invoke((Action)delegate() { refreshSubscriptionList(); });
+                    };
+
+                    // Start loading in a new thread
+                    Thread workerThread = new Thread(insertedSubscription.LoadFeed);
+                    workerThread.Start();
+                }
             }
-
-            // Hide tab about items
-            this.RibbonTab_ItemShare.Visibility = Visibility.Collapsed;
-            //this.RibbonTab_ItemManage.Visibility = Visibility.Collapsed;
+            else
+            {
+                MessageBox.Show("You need at least one category to add a subscription.");
+            }
         }
 
-        private void itemList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void AppAbout_Click(object sender, RoutedEventArgs e)
         {
-            // Check if an item is selected
-            if (this.itemList.SelectedItem == null)
-                return;
-
-            // Get the current item selected
-            Item rssItem = (Item)this.itemList.SelectedItem;
-
-            // Create a browser tab with the item link
-            AddBrowerTab(rssItem.Title, rssItem.Link);
+            AboutWindow aboutWindow = new AboutWindow();
+            aboutWindow.ShowDialog();
         }
+
+        private void AppQuit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion 
 
         #region RIBBON TAB - SUBSCRIPTION
 
@@ -217,7 +240,11 @@ namespace RSS_Simple_Stream
             // Get the current subscription selected
             Subscription subscription = (Subscription)this.subscriptionList.SelectedItem;
 
-            
+            // Delete subscription
+            subscription.Manager.Remove(subscription);
+
+            // Refresh subscription list
+            this.refreshSubscriptionList();
         }
 
         #endregion
@@ -278,19 +305,51 @@ namespace RSS_Simple_Stream
 
         #endregion
 
+        #region Window Event
+
+        private void subscriptionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Check if a subscription is selected
+            if (this.subscriptionList.SelectedItem != null)
+            {
+                // Get selected subscription
+                Subscription currentSubscription = (Subscription)this.subscriptionList.SelectedItem;
+
+                // Bind item list with ListView
+                this.itemList.ItemsSource = currentSubscription.ItemManager.ItemList;
+
+                // Show tab about subscription
+                this.RibbonTab_Subscription.Visibility = Visibility.Visible;
+            }
+
+            // Hide tab about items
+            this.RibbonTab_ItemShare.Visibility = Visibility.Collapsed;
+        }
+
+        private void itemList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Check if an item is selected
+            if (this.itemList.SelectedItem == null)
+                return;
+
+            // Get the current item selected
+            Item rssItem = (Item)this.itemList.SelectedItem;
+
+            // Create a browser tab with the item link
+            AddBrowerTab(rssItem.Title, rssItem.Link);
+        }
+
         private void itemList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // If no item is selected
             if (this.itemList.SelectedItem == null)
             {
                 // Hide tab about items
-                //this.RibbonTab_ItemManage.Visibility = Visibility.Hidden;
                 this.RibbonTab_ItemShare.Visibility = Visibility.Hidden;
             }
             else
             {
                 // Show tab about items
-                // this.RibbonTab_ItemManage.Visibility = Visibility.Visible;
                 this.RibbonTab_ItemShare.Visibility = Visibility.Visible;
             }
         }
@@ -320,62 +379,12 @@ namespace RSS_Simple_Stream
             }
         }
 
-        private void categoryManage_Click(object sender, RoutedEventArgs e)
-        {
-            CategoryWindow categoryWindow = new CategoryWindow();
-            categoryWindow.ShowDialog();
-
-            refreshSubscriptionList();
-        }
-
         private void RibbonWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Close connection
             SQLiteDatabase.getInstance(Settings.SQLITE_DATABASE).closeConnection();
         }
 
-        private void AppAbout_Click(object sender, RoutedEventArgs e)
-        {
-            AboutWindow aboutWindow = new AboutWindow();
-            aboutWindow.ShowDialog();
-        }
-
-        private void AppQuit_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void subscriptionAdd_Click(object sender, RoutedEventArgs e)
-        {
-            CategoryManager categoryManager = CategoryManager.getInstance();
-            
-            // Check if at least one category exists
-            if (categoryManager.CategoryList.Count > 0)
-            {
-                // Open a new window to add a new subscription
-                SubscriptionDataWindow subscriptionWindow = new SubscriptionDataWindow();
-                subscriptionWindow.ShowDialog();
-
-                // Get inserted subscription from the window
-                Subscription insertedSubscription = subscriptionWindow.InsertedSubscription;
-
-                if (insertedSubscription != null)
-                {
-                    // Invoke refresh category list when load is finished
-                    insertedSubscription.ProgressUpdate += (s, ev) =>
-                    {
-                        Dispatcher.Invoke((Action)delegate() { refreshSubscriptionList(); });
-                    };
-
-                    // Start loading in a new thread
-                    Thread workerThread = new Thread(insertedSubscription.LoadFeed);
-                    workerThread.Start();
-                }
-            }
-            else
-            {
-                MessageBox.Show("You need at least one category to add a subscription.");
-            }
-        }
+        #endregion
     }
 }

@@ -40,15 +40,8 @@
             RIBBON :
             Set of toolbars placed on several tabs
         -->
-        <Fluent:Ribbon Name="mainRibbon">
+        <Fluent:Ribbon Name="mainRibbon" Grid.Row="0">
             <Fluent:Ribbon.ContextualGroups>
-
-                <!--
-                <Fluent:RibbonContextualTabGroup x:Name="tabCategory"
-                                                 Background="Purple"
-                                                 Header="Category"
-                                                 Visibility="Visible" />
-                -->
                 
                 <Fluent:RibbonContextualTabGroup x:Name="tabSubscription"
                                                  Background="#FF2B579A"
@@ -69,10 +62,6 @@
             -->
             <!-- Tabs -->
             <Fluent:RibbonTabItem Header="Home">
-                <!--<Fluent:RibbonGroupBox Header="Subscription">
-                    <Fluent:Button Name="subscriptionImport" Header="Import subscription list" Icon="Images\Green.png" LargeIcon="Images\GreenLarge.png" />
-                    <Fluent:Button Name="subscriptionExport" Header="Export subscription list" Icon="Images\Gray.png" LargeIcon="Images\GrayLarge.png" />
-                </Fluent:RibbonGroupBox>-->
                 <Fluent:RibbonGroupBox Header="">
                     <Fluent:Button Name="categoryManage" Click="categoryManage_Click" Margin="5 0" Header="Manage all categories" Icon="Images\folder_feed_16x16.png" LargeIcon="Images\folder_feed_32x32.png" />
                 </Fluent:RibbonGroupBox>
@@ -89,19 +78,8 @@
                 <Fluent:RibbonGroupBox Header="Subscription">
                     <Fluent:Button Name="subscriptionRefresh" Click="subscriptionRefresh_Click" Margin="5 0" Header="Refresh current" Icon="Images\refresh_16x16.png" LargeIcon="Images\refresh_32x32.png" />
                     <Fluent:Button Name="subscriptionDelete" Click="subscriptionDelete_Click" Margin="5 0" Header="Delete current" Icon="Images\feed_delete_16x16.png" LargeIcon="Images\feed_delete_32x32.png" />
-                    
-                    <!--<Fluent:TextBox x:Name="textBox"
-                                    InputWidth="70"
-                                    MaxLength="5"
-                                    Header="Search subscription"
-                                    Text="CurrentText" /> -->
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
-            <!-- <Fluent:RibbonTabItem Name="RibbonTab_ItemManage" Header="Manage" Group="{Binding ElementName=tabItem, Mode=OneWay}">
-                <Fluent:RibbonGroupBox Header="Group">
-
-                </Fluent:RibbonGroupBox>
-            </Fluent:RibbonTabItem> -->
             <Fluent:RibbonTabItem Name="RibbonTab_ItemShare" Header="Share" Group="{Binding ElementName=tabItem, Mode=OneWay}">
                 <Fluent:RibbonGroupBox Header="Share">
                     <Fluent:Button Name="itemShare_Facebook" Click="itemShare_Facebook_Click" Margin="5 0" Header="Share on Facebook" Icon="Images\facebook_16x16.png" LargeIcon="Images\facebook_32x32.png" />
@@ -138,7 +116,6 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Name" Width="175" DisplayMemberBinding="{Binding Title}" />
-                                <!-- <GridViewColumn Header="Unread" Width="50" DisplayMemberBinding="{Binding Unread}" /> -->
                             </GridView>
                         </ListView.View>
 
@@ -153,8 +130,6 @@
                                                         <Expander.Header>
                                                             <StackPanel Orientation="Horizontal">
                                                                 <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="Gray" VerticalAlignment="Bottom" />
-                                                                <!-- <TextBlock Text="{Binding ItemCount}" FontSize="16" Foreground="Gray" FontWeight="Bold" FontStyle="Italic" Margin="10,0,0,0" VerticalAlignment="Bottom" />
-                                                                <TextBlock Text=" item(s)" FontSize="16" Foreground="Silver" FontStyle="Italic" VerticalAlignment="Bottom" />-->
                                                             </StackPanel>
                                                         </Expander.Header>
                                                         <ItemsPresenter />
@@ -174,17 +149,18 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Name" Width="175" DisplayMemberBinding="{Binding Title}" />
-                                <!-- <GridViewColumn Header="Unread" Width="50" DisplayMemberBinding="{Binding Unread}" /> -->
                             </GridView>
                         </ListView.View>
                     </ListView>
                 </Grid>
             </TabItem>
+            
             <!-- FOR HTML TEST WITH WEBBROWSER
             <TabItem Header="Web">
                 <WebBrowser Source="http://html5test.com/" />
             </TabItem>
             -->
+            
         </TabControl>
     </Grid>
 </Fluent:RibbonWindow>

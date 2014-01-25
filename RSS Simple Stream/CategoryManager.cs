@@ -53,7 +53,6 @@ namespace RSS_Simple_Stream
 
         public Category AddToList(int id, string name)
         {
-            // TODO: Check if exists already
             Category category = new Category(id, name);
 
             this.categoryList.Add(category);

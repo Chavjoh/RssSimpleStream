@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 namespace RSS_Simple_Stream
 {
     /// <summary>
-    /// Logique d'interaction pour CategoryWindow.xaml
+    /// Interaction logic for CategoryWindow.xaml
     /// </summary>
     public partial class CategoryWindow : Window
     {
@@ -32,6 +32,8 @@ namespace RSS_Simple_Stream
             this.buttonEdit.IsEnabled = false;
             this.buttonDelete.IsEnabled = false;
         }
+
+        #region Window Event
 
         private void categoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -85,7 +87,7 @@ namespace RSS_Simple_Stream
             Category category = (Category)this.categoryList.SelectedItem;
 
             // Confirmation message
-            MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure ? It will destroy the category and all subscription associated.", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+            MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure ? It will destroy the category and all subscriptions associated.", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             // If user confirm to delete category
             if (messageBoxResult == MessageBoxResult.Yes)
@@ -102,5 +104,12 @@ namespace RSS_Simple_Stream
                 this.categoryList.Items.Refresh();
             }
         }
+
+        private void buttonClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
     }
 }

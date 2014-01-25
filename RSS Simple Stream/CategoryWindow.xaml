@@ -4,20 +4,24 @@
         Title="Manage all categories" 
         Height="300" 
         Width="500" 
+        MinWidth="300"
+        MinHeight="200"
         WindowStartupLocation="CenterScreen">
-    <DockPanel Margin="10">
-        <StackPanel DockPanel.Dock="Right" Margin="10,0">
-            <StackPanel.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Margin" Value="0,0,0,5" />
-                </Style>
-            </StackPanel.Resources>
-            <TextBlock FontWeight="Bold" Margin="0,0,0,10">Category</TextBlock>
-            <Button Name="buttonAdd" Click="buttonAdd_Click">Add</Button>
-            <Button Name="buttonEdit" Click="buttonEdit_Click">Edit</Button>
-            <Button Name="buttonDelete" Click="buttonDelete_Click">Delete</Button>
-        </StackPanel>
-        <ListBox Name="categoryList" HorizontalContentAlignment="Stretch" SelectionMode="Extended" SelectionChanged="categoryList_SelectionChanged">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="125" />
+        </Grid.ColumnDefinitions>
+
+        <ListBox Grid.Row="0" 
+                 Grid.Column="0" 
+                 Name="categoryList" 
+                 HorizontalContentAlignment="Stretch" 
+                 SelectionMode="Extended" 
+                 SelectionChanged="categoryList_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,2">
@@ -29,5 +33,53 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-    </DockPanel>
+
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Margin="10 0 0 0">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="0,0,0,5" />
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock FontWeight="Bold" Margin="0,0,0,10">Category</TextBlock>
+                <Button Name="buttonAdd" Click="buttonAdd_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Stretch="None" Source="Images/bullet_add_16x16.png" />
+                        <TextBlock Text="Add" Width="40" Margin="10 0 0 0"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="buttonEdit" Click="buttonEdit_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Stretch="None" Source="Images/bullet_edit_16x16.png" />
+                        <TextBlock Text="Edit" Width="40" Margin="10 0 0 0"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="buttonDelete" Click="buttonDelete_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Stretch="None" Source="Images/bullet_delete_16x16.png" />
+                        <TextBlock Text="Delete" Width="40" Margin="10 0 0 0"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            
+            <Button Grid.Row="1" 
+                    Grid.Column="0" 
+                    Margin="10 8 0 0"
+                    Name="buttonClose" 
+                    Click="buttonClose_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Stretch="None" Source="Images/quit_16x16.png" />
+                    <TextBlock Text="Close" Width="40" Margin="10 0 0 0"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
 </Window>
