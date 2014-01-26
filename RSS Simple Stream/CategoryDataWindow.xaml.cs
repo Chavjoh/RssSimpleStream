@@ -19,9 +19,19 @@ namespace RSS_Simple_Stream
     /// </summary>
     public partial class CategoryDataWindow : Window
     {
+        private Category editedCategory;
+
         public CategoryDataWindow()
         {
             InitializeComponent();
+        }
+
+        public CategoryDataWindow(Category category)
+        {
+            InitializeComponent();
+
+            this.editedCategory = category;
+            this.NameCategory = category.Name;
         }
 
         public string NameCategory
@@ -32,6 +42,14 @@ namespace RSS_Simple_Stream
 
         private void buttonOk_Click(object sender, RoutedEventArgs e)
         {
+            // No modification on the name
+            if (this.editedCategory != null && this.NameCategory.Equals(this.editedCategory.Name))
+            {
+                DialogResult = false;
+                Close();
+                return;
+            }
+
             // Category name cannot be empty
             if (this.NameCategory.Equals(""))
             {

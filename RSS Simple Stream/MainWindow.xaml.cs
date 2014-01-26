@@ -325,7 +325,7 @@ namespace RSS_Simple_Stream
 
                 // Clear item list
                 this.itemList.ItemsSource = null;
-                this.itemList.Items.Refresh();
+                this.itemList.Items.Clear();
 
                 // Hide subscription tab
                 this.RibbonTab_Subscription.Visibility = Visibility.Collapsed;
@@ -400,6 +400,11 @@ namespace RSS_Simple_Stream
                 // Show tab about subscription
                 this.RibbonTab_Subscription.Visibility = Visibility.Visible;
             }
+            else
+            {
+                // Show tab about subscription
+                this.RibbonTab_Subscription.Visibility = Visibility.Collapsed;
+            }
 
             // Hide tab about items
             this.RibbonTab_ItemShare.Visibility = Visibility.Collapsed;
@@ -443,8 +448,11 @@ namespace RSS_Simple_Stream
                     // Hide close button in Ribbon
                     this.tabClose.Visibility = Visibility.Collapsed;
 
-                    // Show subscription ribbon tab
-                    this.RibbonTab_Subscription.Visibility = Visibility.Visible;
+                    if (this.subscriptionList.SelectedItem != null)
+                    {
+                        // Show subscription ribbon tab
+                        this.RibbonTab_Subscription.Visibility = Visibility.Visible;
+                    }
 
                     // Show item ribbon tab only if item selected on feed tab
                     if (this.itemList.SelectedItem != null)

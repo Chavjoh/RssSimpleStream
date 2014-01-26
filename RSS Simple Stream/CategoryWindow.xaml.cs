@@ -67,8 +67,7 @@ namespace RSS_Simple_Stream
             Category category = (Category)this.categoryList.SelectedItem;
 
             // Create a window to edit data with value
-            var dialog = new CategoryDataWindow();
-            dialog.NameCategory = category.Name;
+            var dialog = new CategoryDataWindow(category);
 
             // When data is edited
             if (dialog.ShowDialog() == true)
@@ -97,14 +96,10 @@ namespace RSS_Simple_Stream
             {
                 categoryManager.Delete(category);
 
-                // Disable button when list is empty
-                if (categoryManager.CategoryList.Count == 0)
-                {
-                    this.buttonEdit.IsEnabled = false;
-                    this.buttonDelete.IsEnabled = false;
-                }
-
                 this.categoryList.Items.Refresh();
+
+                this.buttonEdit.IsEnabled = false;
+                this.buttonDelete.IsEnabled = false;
             }
         }
 
