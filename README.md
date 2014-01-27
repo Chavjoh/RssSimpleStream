@@ -1,7 +1,14 @@
-RssSimpleReader
-===============
+Rss Simple Stream
+=================
 
-Feed aggregator with Fluent Ribbon
+Rss Simple Stream is an application developed during the .NET development course in [High School Arc](http://www.he-arc.ch) (Switzerland). 
+
+It's a feed aggregator with Fluent Ribbon with sharing capabilities on social networks.
+
+## Credits
+
+* Fatcow icons from http://www.fatcow.com/free-icons
+* Fluent Ribbon library from http://fluent.codeplex.com
 
 ## Feedback
 
